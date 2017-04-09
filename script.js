@@ -1,6 +1,7 @@
 var DRAG_SENSITIVITY = 20;
 var BODY = document.getElementById('body');
 var DRAG_ELEMENT = document.getElementById('dragElement');
+var UNDO_ELEMENT = document.getElementById('undoElement');
 
 var dragAmount;
 var undoHistory = [];
@@ -21,9 +22,15 @@ function popUndo() {
   undoObject.element.innerHTML = undoObject.amount;
 }
 
-document.onkeydown = function(e) {
-  var evtobj = window.event? event : e;
-  if (evtobj.keyCode == 90 && evtobj.ctrlKey) popUndo();
+if (IS_MOBILE) {
+  UNDO_ELEMENT.addEventListener('touchstart', function(e) {
+    popUndo();
+  });
+} else {
+  document.onkeydown = function(e) {
+    var evtobj = window.event? event : e;
+    if (evtobj.keyCode == 90 && evtobj.ctrlKey) popUndo();
+  }
 }
 
 var dragChangeElements = document.getElementsByClassName('dragChange');
@@ -44,6 +51,7 @@ function addDragFeature(element) {
     var startValue = Number(element.innerHTML);
     pushUndo(element, startValue);
     BODY.style.cursor = 'none';
+    DRAG_ELEMENT.style.display = '';
     BODY.onmousemove = function(e) {
       dragAmount = Math.floor((startY - e.pageY) / DRAG_SENSITIVITY);
       element.innerHTML = startValue + dragAmount;
@@ -55,7 +63,6 @@ function addDragFeature(element) {
       DRAG_ELEMENT.innerHTML = dragAmount;
       DRAG_ELEMENT.style.left = (e.pageX - DRAG_ELEMENT.offsetWidth / 2) + 'px';
       DRAG_ELEMENT.style.top = (e.pageY - DRAG_ELEMENT.offsetHeight / 2) + 'px';
-      DRAG_ELEMENT.style.display = '';
     }
   });
 
@@ -97,7 +104,10 @@ function addMobileDragFeature(element) {
   element.addEventListener('touchstart', function(e) {
     var startY = e.changedTouches.item(0).pageY;
     var startValue = Number(element.innerHTML);
+    pushUndo(element, startValue);
     BODY.style.cursor = 'none';
+    DRAG_ELEMENT.style.display = '';
+    UNDO_ELEMENT.style.display = 'none';
     registerEventListener(BODY, {
       event: 'touchmove',
       callback: function(e) {
@@ -109,13 +119,13 @@ function addMobileDragFeature(element) {
           DRAG_ELEMENT.removeAttribute('positive');
         }
         DRAG_ELEMENT.innerHTML = dragAmount;
-        DRAG_ELEMENT.style.display = '';
       }
     });
   });
 
   BODY.addEventListener('touchend', function(e) {
     DRAG_ELEMENT.style.display = 'none';
+    UNDO_ELEMENT.style.display = '';
     BODY.style.cursor = null;
     unRegisterAllEventListeners(BODY);
   });

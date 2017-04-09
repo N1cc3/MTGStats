@@ -124,3 +124,12 @@ body {
 .dragElement[positive='true'] {
   color: lightgreen;
 }
+
+.undoElement {
+  position: absolute;
+  height: 0.7em;
+  width: 0.7em;
+  background-image: url('img/undo.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+}
