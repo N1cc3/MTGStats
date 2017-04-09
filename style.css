@@ -1,0 +1,108 @@
+body {
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  font-size: 20vh;
+  background-image: url('img/bg1.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  text-shadow: 0.02em 0.02em 0.02em black;
+  user-select: none;
+  cursor: crosshair;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.playerRow {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.player {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.lifeBox {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.infect {
+  color: darkgreen;
+  background-image: url('img/infect.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.life {
+  color: white;
+  font-size: 2em;
+  margin-top: -0.25em;
+  font-weight: bold;
+  cursor: s-resize;
+}
+
+.player.red {
+  background: radial-gradient(rgba(255,0,0,0.5) 0%, rgba(255,0,0,0.4) 40%, rgba(255,0,0,0.0) 70%);
+}
+.player.blue {
+  background: radial-gradient(rgba(0,0,255,0.5) 0%, rgba(0,0,255,0.4) 40%, rgba(0,0,255,0.0) 70%);
+}
+.player.teal {
+  background: radial-gradient(rgba(0,255,255,0.5) 0%, rgba(0,255,255,0.4) 40%, rgba(0,255,255,0.0) 70%);
+}
+.player.orange {
+  background: radial-gradient(rgba(255,165,0,0.5) 0%, rgba(255,165,0,0.4) 40%, rgba(255,165,0,0.0) 70%);
+}
+
+.commanderDmgColumn {
+  display: flex;
+  flex-direction: column;
+  padding: 0.1em;
+}
+
+.commanderDmg {
+  text-align: center;
+  font-size: 0.7em;
+}
+
+.commanderDmg.red {
+  color: rgb(255,120,120);
+}
+.commanderDmg.blue {
+  color: rgb(120,120,255);
+}
+.commanderDmg.teal {
+  color: rgb(120,255,255);
+}
+.commanderDmg.orange {
+  color: rgb(255,200,120);
+}
+
+.dragChange {
+  cursor: s-resize;
+}
+
+.dragElement {
+  position: absolute;
+  font-size: 0.5em;
+  color: red; /* Default is negative. */
+}
+.dragElement[positive='true'] {
+  color: green;
+}
