@@ -1,10 +1,9 @@
 var DRAG_SENSITIVITY = 20;
-
-var players = 2;
-var dragAmount;
-
 var BODY = document.getElementById('body');
 var DRAG_ELEMENT = document.getElementById('dragElement');
+
+var dragAmount;
+var undoHistory = [];
 
 window.mobileAndTabletcheck = function() {
   var check = false;
@@ -13,14 +12,18 @@ window.mobileAndTabletcheck = function() {
 };
 var IS_MOBILE = window.mobileAndTabletcheck();
 
-function addPlayer() {
-    var itm = document.getElementById("myList2").lastChild;
-    var cln = itm.cloneNode(true);
-    document.getElementById("myList1").appendChild(cln);
+function pushUndo(element, amount) {
+  undoHistory.push({'element': element, 'amount': amount});
 }
 
-function removePlayer() {
+function popUndo() {
+  var undoObject = undoHistory.pop();
+  undoObject.element.innerHTML = undoObject.amount;
+}
 
+document.onkeydown = function(e) {
+  var evtobj = window.event? event : e;
+  if (evtobj.keyCode == 90 && evtobj.ctrlKey) popUndo();
 }
 
 var dragChangeElements = document.getElementsByClassName('dragChange');
@@ -39,6 +42,7 @@ function addDragFeature(element) {
     }
     var startY = e.pageY;
     var startValue = Number(element.innerHTML);
+    pushUndo(element, startValue);
     BODY.style.cursor = 'none';
     BODY.onmousemove = function(e) {
       dragAmount = Math.floor((startY - e.pageY) / DRAG_SENSITIVITY);
