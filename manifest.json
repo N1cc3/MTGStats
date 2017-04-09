@@ -1,8 +1,14 @@
 {
   "name": "MTG Stats",
-  "short_name": "MTGS",
+  "short_name": "MTG Stats",
   "start_url": "index.html",
   "display": "standalone",
   "orientation": "landscape",
-  "icons": []
+  "icons": [
+    {
+      "src": "img/MTG.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    }
+  ]
 }
