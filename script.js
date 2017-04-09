@@ -20,6 +20,9 @@ function pushUndo(element, amount) {
 function popUndo() {
   var undoObject = undoHistory.pop();
   undoObject.element.innerHTML = undoObject.amount;
+  if (undoHistory.length == 0) {
+    UNDO_ELEMENT.style.display = 'none';
+  }
 }
 
 if (IS_MOBILE) {
@@ -125,7 +128,11 @@ function addMobileDragFeature(element) {
 
   BODY.addEventListener('touchend', function(e) {
     DRAG_ELEMENT.style.display = 'none';
-    UNDO_ELEMENT.style.display = '';
+    if (undoHistory.length == 0) {
+      UNDO_ELEMENT.style.display = 'none';
+    } else {
+      UNDO_ELEMENT.style.display = '';
+    }
     BODY.style.cursor = null;
     unRegisterAllEventListeners(BODY);
   });
