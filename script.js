@@ -65,31 +65,58 @@ function addDragFeature(element) {
   });
 }
 
+function registerEventListener(obj, params) {
+	if ( typeof obj._eventListeners == 'undefined' ) {
+		obj._eventListeners = [];
+	}
+
+	obj.addEventListener(params.event, params.callback);
+
+	var eventListeners = obj._eventListeners;
+	eventListeners.push(params);
+	obj._eventListeners = eventListeners;
+}
+function unRegisterAllEventListeners(obj) {
+	if ( typeof obj._eventListeners == 'undefined' || obj._eventListeners.length == 0 ) {
+		return;
+	}
+
+	for(var i = 0, len = obj._eventListeners.length; i < len; i++) {
+		var e = obj._eventListeners[i];
+		obj.removeEventListener(e.event, e.callback);
+	}
+
+	obj._eventListeners = [];
+}
+
 function addMobileDragFeature(element) {
   element.addEventListener('touchstart', function(e) {
-    var startY = e.originalEvent.touches[0].clientY;
+    var startY = e.changedTouches.item(0).pageY;
     var startValue = Number(element.innerHTML);
     BODY.style.cursor = 'none';
-    BODY.ontouchmove = function(e) {
-      dragAmount = Math.floor((startY - e.originalEvent.touches[0].clientY) / DRAG_SENSITIVITY);
-      element.innerHTML = startValue + dragAmount;
-      if (dragAmount >= 0) {
-        DRAG_ELEMENT.setAttribute('positive', 'true');
-      } else {
-        DRAG_ELEMENT.removeAttribute('positive');
+    registerEventListener(BODY, {
+      event: 'touchmove',
+      callback: function(e) {
+        dragAmount = Math.floor((startY - e.changedTouches.item(0).pageY) / DRAG_SENSITIVITY);
+        element.innerHTML = startValue + dragAmount;
+        if (dragAmount >= 0) {
+          DRAG_ELEMENT.setAttribute('positive', 'true');
+        } else {
+          DRAG_ELEMENT.removeAttribute('positive');
+        }
+        DRAG_ELEMENT.innerHTML = dragAmount;
+        DRAG_ELEMENT.style.left =
+          (e.changedTouches.item(0).pageX - DRAG_ELEMENT.offsetWidth / 2 - 75) + 'px';
+        DRAG_ELEMENT.style.top =
+          (e.changedTouches.item(0).pageY - DRAG_ELEMENT.offsetHeight / 2 - 75) + 'px';
+        DRAG_ELEMENT.style.display = '';
       }
-      DRAG_ELEMENT.innerHTML = dragAmount;
-      DRAG_ELEMENT.style.left =
-        (e.originalEvent.touches[0].clientX - DRAG_ELEMENT.offsetWidth / 2) + 'px';
-      DRAG_ELEMENT.style.top =
-        (e.originalEvent.touches[0].clientY - DRAG_ELEMENT.offsetHeight / 2) + 'px';
-      DRAG_ELEMENT.style.display = '';
-    }
+    });
   });
 
   BODY.addEventListener('touchend', function(e) {
     DRAG_ELEMENT.style.display = 'none';
-    BODY.onmousemove = null
     BODY.style.cursor = null;
+    unRegisterAllEventListeners(BODY);
   });
 }

@@ -122,5 +122,5 @@ body {
   color: red; /* Default is negative. */
 }
 .dragElement[positive='true'] {
-  color: green;
+  color: lightgreen;
 }
