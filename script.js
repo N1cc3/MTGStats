@@ -105,10 +105,6 @@ function addMobileDragFeature(element) {
           DRAG_ELEMENT.removeAttribute('positive');
         }
         DRAG_ELEMENT.innerHTML = dragAmount;
-        DRAG_ELEMENT.style.left =
-          (e.changedTouches.item(0).pageX - DRAG_ELEMENT.offsetWidth / 2 - 75) + 'px';
-        DRAG_ELEMENT.style.top =
-          (e.changedTouches.item(0).pageY - DRAG_ELEMENT.offsetHeight / 2 - 75) + 'px';
         DRAG_ELEMENT.style.display = '';
       }
     });
