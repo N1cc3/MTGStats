@@ -67,11 +67,11 @@ function addDragFeature(element) {
 
 function addMobileDragFeature(element) {
   element.addEventListener('touchstart', function(e) {
-    var startY = e.pageY;
+    var startY = e.originalEvent.touches[0].clientY;
     var startValue = Number(element.innerHTML);
     BODY.style.cursor = 'none';
     BODY.ontouchmove = function(e) {
-      dragAmount = Math.floor((startY - e.pageY) / DRAG_SENSITIVITY);
+      dragAmount = Math.floor((startY - e.originalEvent.touches[0].clientY) / DRAG_SENSITIVITY);
       element.innerHTML = startValue + dragAmount;
       if (dragAmount >= 0) {
         DRAG_ELEMENT.setAttribute('positive', 'true');
@@ -79,8 +79,10 @@ function addMobileDragFeature(element) {
         DRAG_ELEMENT.removeAttribute('positive');
       }
       DRAG_ELEMENT.innerHTML = dragAmount;
-      DRAG_ELEMENT.style.left = (e.pageX - DRAG_ELEMENT.offsetWidth / 2) + 'px';
-      DRAG_ELEMENT.style.top = (e.pageY - DRAG_ELEMENT.offsetHeight / 2) + 'px';
+      DRAG_ELEMENT.style.left =
+        (e.originalEvent.touches[0].clientX - DRAG_ELEMENT.offsetWidth / 2) + 'px';
+      DRAG_ELEMENT.style.top =
+        (e.originalEvent.touches[0].clientY - DRAG_ELEMENT.offsetHeight / 2) + 'px';
       DRAG_ELEMENT.style.display = '';
     }
   });
