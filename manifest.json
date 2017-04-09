@@ -1,0 +1,8 @@
+{
+  "name": "MTG Stats",
+  "short_name": "MTGS",
+  "start_url": "index.html",
+  "display": "standalone",
+  "orientation": "landscape",
+  "icons": []
+}
