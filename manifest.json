@@ -2,6 +2,8 @@
   "name": "MTG Stats",
   "short_name": "MTG Stats",
   "start_url": "index.html",
+  "theme_color": "#ccffff",
+  "background_color": "#ccffff",
   "display": "standalone",
   "icons": [
     {
