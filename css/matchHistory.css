@@ -1,0 +1,9 @@
+.historyBox {
+  height: 90%;
+  width: 90%;
+  border-style: solid;
+  border-color: white;
+  border-width: 2px;
+  border-radius: 0.2em;
+  background-color: rgba(0, 0, 0, 0.5);
+}

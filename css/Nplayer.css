@@ -1,41 +1,3 @@
-body {
-  height: 100vh;
-  width: 100vw;
-  margin: 0;
-  font-size: 20vmin;
-  background-image: url('img/bg1.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
-  text-shadow: 0.02em 0.02em 0.02em black;
-  user-select: none;
-  cursor: crosshair;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.buttons {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.button {
-  background-color: rgba(70, 200, 80, 0.8);
-  border-radius: 0.2em;
-  color: white;
-  padding: 0.15em 0.15em;
-  margin: 0.1em;
-  text-align: center;
-  text-decoration: none;
-  cursor: pointer;
-}
-
 .playerRow {
   width: 100%;
   display: flex;
@@ -63,7 +25,7 @@ body {
 
 .infect {
   color: darkgreen;
-  background-image: url('img/infect.png');
+  background-image: url('../img/infect.png');
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
@@ -131,7 +93,7 @@ body {
   position: absolute;
   height: 0.7em;
   width: 0.7em;
-  background-image: url('img/undo.png');
+  background-image: url('../img/undo.png');
   background-repeat: no-repeat;
   background-size: contain;
 }

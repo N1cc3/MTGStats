@@ -1,0 +1,17 @@
+body {
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  font-size: 20vmin;
+  background-image: url('../img/bg1.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  text-shadow: 0.02em 0.02em 0.02em black;
+  user-select: none;
+  cursor: crosshair;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
