@@ -17,3 +17,8 @@
   text-decoration: none;
   cursor: pointer;
 }
+
+.button.history {
+  background-color: rgba(70, 200, 200, 0.8);
+  font-size: 0.7em;
+}
