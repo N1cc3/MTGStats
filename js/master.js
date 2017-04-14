@@ -13,6 +13,9 @@ window.mobileAndTabletcheck = function() {
 };
 var IS_MOBILE = window.mobileAndTabletcheck();
 
+var playerNameRed = prompt("Player Red name?", "Red");
+var playerNameBlue = prompt("Player Blue name?", "Blue");
+
 function pushUndo(element, amount) {
   undoHistory.push({'element': element, 'amount': amount});
 }
