@@ -27,6 +27,8 @@ function addMatches(matches) {
     }
     fragment.appendChild(matchElement);
   }
+
+  matchesElement.appendChild(fragment);
 }
 
 addMatches(matches);
