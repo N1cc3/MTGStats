@@ -7,7 +7,7 @@ var debugMatches = JSON.stringify([
 
 COOKIE.set('matches', debugMatches, 1);
 
-var matches = COOKIE.get("matches");
+var matches = JSON.parse(COOKIE.get("matches"));
 
 function addMatches(matches) {
   var matchesElement = document.getElementById('matches');
