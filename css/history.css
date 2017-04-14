@@ -13,33 +13,33 @@
   justify-content: flex-start;
 }
 
-.historyRow {
+.match {
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
 
-.playerName {
+.player {
   font-size: 0.3em;
   padding: 0.1em;
   margin: 0.1em;
 }
 
-.playerName.winner {
+.player[winner] {
   border-style: solid;
   border-width: thin;
   border-radius: 0.2em;
 }
 
-.playerName.red {
+.player[player='0'] {
   color: rgb(255,0,0);
 }
-.playerName.blue {
+.player[player='1'] {
   color: rgb(0,0,255);
 }
-.playerName.teal {
+.player[player='2'] {
   color: rgb(0,255,255);
 }
-.playerName.orange {
+.player[player='3'] {
   color: rgb(255,165,0);
 }
