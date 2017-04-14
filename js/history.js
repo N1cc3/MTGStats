@@ -10,7 +10,7 @@ COOKIE.set('matches', debugMatches, 1);
 var matches = JSON.parse(COOKIE.get("matches"));
 
 function addMatches(matches) {
-  var matchesElement = document.getElementById('matches');
+  var historyBox = document.getElementById('historyBox');
   var fragment = document.createDocumentFragment();
 
   for (match of matches) {
@@ -28,7 +28,7 @@ function addMatches(matches) {
     fragment.appendChild(matchElement);
   }
 
-  matchesElement.appendChild(fragment);
+  historyBox.appendChild(fragment);
 }
 
 addMatches(matches);
