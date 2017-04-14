@@ -23,7 +23,9 @@ function addMatches(matches) {
       playerElement.setAttribute('player', i);
       if (match.winner = i) playerElement.setAttribute('winner', '');
       playerElement.textContent = players[i];
+      matchElement.appendChild(playerElement);
     }
+    fragment.appendChild(matchElement);
   }
 }
 
