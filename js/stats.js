@@ -13,9 +13,6 @@ window.mobileAndTabletcheck = function() {
 };
 var IS_MOBILE = window.mobileAndTabletcheck();
 
-// var playerNameRed = prompt("Player Red name?", "Red");
-// var playerNameBlue = prompt("Player Blue name?", "Blue");
-
 function pushUndo(element, amount) {
   undoHistory.push({'element': element, 'amount': amount});
 }
@@ -36,6 +33,7 @@ if (IS_MOBILE) {
   document.onkeydown = function(e) {
     var evtobj = window.event? event : e;
     if (evtobj.keyCode == 90 && evtobj.ctrlKey) popUndo();
+    if (evtobj.keyCode == 13) endGame();
   }
 }
 
@@ -139,4 +137,16 @@ function addMobileDragFeature(element) {
     BODY.style.cursor = null;
     unRegisterAllEventListeners(BODY);
   });
+}
+
+function endGame() {
+  var playerNameRed = prompt('Player Red name?', 'Red');
+  var playerNameBlue = prompt('Player Blue name?', 'Blue');
+  var winner = prompt('Winner?', '0');
+  var matches = JSON.parse(COOKIE.get('matches'));
+  matches.push({
+    players: [playerNameRed, playerNameBlue],
+    winner: Number(winner)
+  });
+  COOKIE.set('matches', matches, 1);
 }
