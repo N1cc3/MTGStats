@@ -145,7 +145,7 @@ function endGame() {
   var winner = prompt('Winner?', '0');
   winner = Number(winner);
   var matches = COOKIE.get('matches');
-  if (matches == 'undefined') {
+  if (matches == '') {
     matches = '[]';
   }
   matches = JSON.parse(matches);
