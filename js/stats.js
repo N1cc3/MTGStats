@@ -143,10 +143,12 @@ function endGame() {
   var playerNameRed = prompt('Player Red name?', 'Red');
   var playerNameBlue = prompt('Player Blue name?', 'Blue');
   var winner = prompt('Winner?', '0');
+  winner = Number(winner);
   var matches = JSON.parse(COOKIE.get('matches'));
   matches.push({
-    players: [playerNameRed, playerNameBlue],
-    winner: Number(winner)
+    "players": [playerNameRed, playerNameBlue],
+    "winner": winner
   });
-  COOKIE.set('matches', JSON.stringify(matches), 1);
+  var matchesString = JSON.stringify(matches);
+  COOKIE.set('matches', matchesString), 1);
 }
