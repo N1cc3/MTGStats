@@ -21,7 +21,7 @@ function addMatches(matches) {
       var playerElement = document.createElement('div');
       playerElement.className = 'player';
       playerElement.setAttribute('player', i);
-      if (match.winner = i) playerElement.setAttribute('winner', '');
+      if (match.winner == i) playerElement.setAttribute('winner', '');
       playerElement.textContent = players[i];
       matchElement.appendChild(playerElement);
     }
