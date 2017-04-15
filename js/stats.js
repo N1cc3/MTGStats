@@ -150,5 +150,5 @@ function endGame() {
     "winner": winner
   });
   var matchesString = JSON.stringify(matches);
-  COOKIE.set('matches', matchesString), 1);
+  COOKIE.set('matches', matchesString, 1);
 }
