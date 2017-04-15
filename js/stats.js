@@ -144,7 +144,11 @@ function endGame() {
   var playerNameBlue = prompt('Player Blue name?', 'Blue');
   var winner = prompt('Winner?', '0');
   winner = Number(winner);
-  var matches = JSON.parse(COOKIE.get('matches'));
+  var matches = COOKIE.get('matches');
+  if (matches == 'undefined') {
+    matches = '[]';
+  }
+  matches = JSON.parse(matches);
   matches.push({
     "players": [playerNameRed, playerNameBlue],
     "winner": winner
