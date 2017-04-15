@@ -148,5 +148,5 @@ function endGame() {
     players: [playerNameRed, playerNameBlue],
     winner: Number(winner)
   });
-  COOKIE.set('matches', matches, 1);
+  COOKIE.set('matches', JSON.stringify(matches), 1);
 }
