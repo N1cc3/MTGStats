@@ -3,7 +3,7 @@ var BODY = document.getElementById('body');
 var DRAG_ELEMENT = document.getElementById('dragElement');
 var UNDO_ELEMENT = document.getElementById('undoElement');
 
-var dragAmount;
+var dragAmount = 0;
 var undoHistory = [];
 
 window.mobileAndTabletcheck = function() {
@@ -39,12 +39,17 @@ if (IS_MOBILE) {
 
 var dragChangeElements = document.getElementsByClassName('dragChange');
 for (dragChangeElement of dragChangeElements) {
+  if (dragChangeElement.classList.contains('commanderDmg')) {
+    continue;
+  }
   if (IS_MOBILE) {
     addMobileDragFeature(dragChangeElement);
   } else {
     addDragFeature(dragChangeElement);
   }
 }
+addDragFeature(document.getElementById('cmdDmg0'), document.getElementById('life0'));
+addDragFeature(document.getElementById('cmdDmg1'), document.getElementById('life1'));
 
 function addDragFeature(element, linkedElement) {
   element.addEventListener('mousedown', function(e) {
@@ -57,6 +62,7 @@ function addDragFeature(element, linkedElement) {
 
     if (linkedElement != null) {
       var linkedStartValue = Number(linkedElement.innerHTML);
+      pushUndo(linkedElement, linkedStartValue);
     }
 
     BODY.style.cursor = 'none';
