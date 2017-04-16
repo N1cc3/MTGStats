@@ -46,7 +46,7 @@ for (dragChangeElement of dragChangeElements) {
   }
 }
 
-function addDragFeature(element) {
+function addDragFeature(element, linkedElement) {
   element.addEventListener('mousedown', function(e) {
     if (event.which != 1) {
       return;
@@ -54,11 +54,24 @@ function addDragFeature(element) {
     var startY = e.pageY;
     var startValue = Number(element.innerHTML);
     pushUndo(element, startValue);
+
+    if (linkedElement != null) {
+      var linkedStartValue = Number(linkedElement.innerHTML);
+    }
+
     BODY.style.cursor = 'none';
     DRAG_ELEMENT.style.display = '';
+    DRAG_ELEMENT.innerHTML = dragAmount;
+    DRAG_ELEMENT.style.left = (e.pageX - DRAG_ELEMENT.offsetWidth / 2) + 'px';
+    DRAG_ELEMENT.style.top = (e.pageY - DRAG_ELEMENT.offsetHeight / 2) + 'px';
+    DRAG_ELEMENT.setAttribute('positive', 'true');
+
     BODY.onmousemove = function(e) {
       dragAmount = Math.floor((startY - e.pageY) / DRAG_SENSITIVITY);
       element.innerHTML = startValue + dragAmount;
+      if (linkedElement != null) {
+        linkedElement.innerHTML = linkedStartValue - dragAmount;
+      }
       if (dragAmount >= 0) {
         DRAG_ELEMENT.setAttribute('positive', 'true');
       } else {
