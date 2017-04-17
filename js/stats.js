@@ -2,6 +2,7 @@ var DRAG_SENSITIVITY = 20;
 var BODY = document.getElementById('body');
 var DRAG_ELEMENT = document.getElementById('dragElement');
 var UNDO_ELEMENT = document.getElementById('undoElement');
+var ENDGAME_ELEMENT = document.getElementById('endgameElement');
 
 var dragAmount;
 var undoHistory = [];
@@ -156,3 +157,32 @@ function endGame() {
   var matchesString = JSON.stringify(matches);
   COOKIE.set('matches', matchesString, 1);
 }
+
+function resetSlider() {
+  ENDGAME_ELEMENT.setAttribute('reset', '');
+  ENDGAME_ELEMENT.addEventListener('transitionend', function(e) {
+    ENDGAME_ELEMENT.removeAttribute('reset');
+  });
+  ENDGAME_ELEMENT.style.removeProperty('width');
+}
+
+ENDGAME_ELEMENT.addEventListener('mousedown', function(e) {
+  if (event.which != 1) {
+    return;
+  }
+  ENDGAME_ELEMENT.removeAttribute('reset');
+  var startX = e.pageX;
+  var startWidth = ENDGAME_ELEMENT.offsetWidth;
+  BODY.onmousemove = function(e) {
+    ENDGAME_ELEMENT.style.width = startWidth + (e.pageX - startX) + 'px';
+    if (ENDGAME_ELEMENT.offsetWidth >= BODY.offsetWidth) alert('Game over!');
+  };
+
+  BODY.addEventListener('mouseup', function(e) {
+    if (event.which != 1) {
+      return;
+    }
+    BODY.onmousemove = null
+    resetSlider();
+  });
+});

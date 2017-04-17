@@ -1,3 +1,11 @@
+.players {
+  height: calc(100% - 0.32em);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
 .playerRow {
   width: 100%;
   display: flex;
@@ -76,8 +84,32 @@
   color: rgb(255,200,120);
 }
 
+.sliderBox {
+  height: 6%
+}
+
+.slider {
+  width: 10em;
+  float: left;
+  text-align: right;
+  font-size: 0.2em;
+  font-style: italic;
+  white-space: nowrap;
+  padding: 0.2em;
+  border-radius: 0.4em;
+  color: white;
+  background-color: rgba(70, 200, 80, 0.8);
+  cursor: ew-resize;
+}
+
+.slider[reset] {
+  transition-property: width;
+  transition-timing-function: ease-in;
+  transition-duration: 1s;
+}
+
 .dragChange {
-  cursor: s-resize;
+  cursor: ns-resize;
 }
 
 .dragElement {
