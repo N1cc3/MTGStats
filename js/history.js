@@ -1,12 +1,3 @@
-// var debugMatches = JSON.stringify([
-//   {
-//     players: ['Maick','Nicce'],
-//     winner: 0
-//   }
-// ]);
-//
-// COOKIE.set('matches', debugMatches, 1);
-
 var matches = JSON.parse(COOKIE.get("matches"));
 
 function addMatches(matches) {
