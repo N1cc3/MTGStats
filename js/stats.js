@@ -40,16 +40,15 @@ if (IS_MOBILE) {
 var dragChangeElements = document.getElementsByClassName('dragChange');
 for (dragChangeElement of dragChangeElements) {
   if (dragChangeElement.classList.contains('commanderDmg')) {
-    continue;
+    var lifeElement = dragChangeElement.parentElement.parentElement.children[0].children[1];
   }
   if (IS_MOBILE) {
-    addMobileDragFeature(dragChangeElement);
+    addMobileDragFeature(dragChangeElement, lifeElement);
   } else {
-    addDragFeature(dragChangeElement);
+    addDragFeature(dragChangeElement, lifeElement);
   }
+  lifeElement = null;
 }
-addDragFeature(document.getElementById('cmdDmg0'), document.getElementById('life0'));
-addDragFeature(document.getElementById('cmdDmg1'), document.getElementById('life1'));
 
 function addDragFeature(element, linkedElement) {
   element.addEventListener('mousedown', function(e) {
