@@ -3,8 +3,8 @@ var BODY = document.getElementById('body');
 var DRAG_ELEMENT = document.getElementById('dragElement');
 var UNDO_ELEMENT = document.getElementById('undoElement');
 
-var dragAmount;
-var lastDragAmount;
+var dragAmount = 0;
+var lastDragAmount = 0;
 var undoHistory = [];
 
 window.mobileAndTabletcheck = function() {
@@ -98,6 +98,7 @@ function addDragFeature(element, linkedElement) {
     DRAG_ELEMENT.style.display = 'none';
     BODY.onmousemove = null
     BODY.style.cursor = null;
+    dragAmount = 0;
   });
 }
 
