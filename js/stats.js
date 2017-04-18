@@ -126,11 +126,17 @@ function unRegisterAllEventListeners(obj) {
 	obj._eventListeners = [];
 }
 
-function addMobileDragFeature(element) {
+function addMobileDragFeature(element, linkedElement) {
   element.addEventListener('touchstart', function(e) {
     var startY = e.changedTouches.item(0).pageY;
     var startValue = Number(element.innerHTML);
     pushUndo(element, startValue);
+
+    if (linkedElement != null) {
+      var linkedStartValue = Number(linkedElement.innerHTML);
+      pushUndo(linkedElement, linkedStartValue);
+    }
+
     BODY.style.cursor = 'none';
     DRAG_ELEMENT.style.display = '';
     UNDO_ELEMENT.style.display = 'none';
@@ -141,6 +147,9 @@ function addMobileDragFeature(element) {
         if (dragAmount != lastDragAmount) new Audio('mp3/click.mp3').play();
         lastDragAmount = dragAmount;
         element.innerHTML = startValue + dragAmount;
+        if (linkedElement != null) {
+          linkedElement.innerHTML = linkedStartValue - dragAmount;
+        }
         if (dragAmount >= 0) {
           DRAG_ELEMENT.setAttribute('positive', 'true');
         } else {
