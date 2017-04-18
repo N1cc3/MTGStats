@@ -228,9 +228,6 @@ ENDGAME_ELEMENT.addEventListener('mousedown', function(e) {
 });
 
 ENDGAME_ELEMENT.addEventListener('touchstart', function(e) {
-  if (event.which != 1) {
-    return;
-  }
   ENDGAME_ELEMENT.removeAttribute('reset');
   var startX = e.changedTouches.item(0).pageX;
   var startWidth = ENDGAME_ELEMENT.offsetWidth;
