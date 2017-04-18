@@ -105,7 +105,7 @@
 .slider[reset] {
   transition-property: width;
   transition-timing-function: ease-in;
-  transition-duration: 1s;
+  transition-duration: 0.5s;
 }
 
 .dragChange {
