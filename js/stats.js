@@ -3,7 +3,8 @@ var BODY = document.getElementById('body');
 var DRAG_ELEMENT = document.getElementById('dragElement');
 var UNDO_ELEMENT = document.getElementById('undoElement');
 
-var dragAmount = 0;
+var dragAmount;
+var lastDragAmount;
 var undoHistory = [];
 
 window.mobileAndTabletcheck = function() {
@@ -73,6 +74,8 @@ function addDragFeature(element, linkedElement) {
 
     BODY.onmousemove = function(e) {
       dragAmount = Math.floor((startY - e.pageY) / DRAG_SENSITIVITY);
+      if (dragAmount != lastDragAmount) new Audio('mp3/click.mp3').play();
+      lastDragAmount = dragAmount;
       element.innerHTML = startValue + dragAmount;
       if (linkedElement != null) {
         linkedElement.innerHTML = linkedStartValue - dragAmount;
@@ -134,6 +137,8 @@ function addMobileDragFeature(element) {
       event: 'touchmove',
       callback: function(e) {
         dragAmount = Math.floor((startY - e.changedTouches.item(0).pageY) / DRAG_SENSITIVITY);
+        if (dragAmount != lastDragAmount) new Audio('mp3/click.mp3').play();
+        lastDragAmount = dragAmount;
         element.innerHTML = startValue + dragAmount;
         if (dragAmount >= 0) {
           DRAG_ELEMENT.setAttribute('positive', 'true');
