@@ -226,3 +226,27 @@ ENDGAME_ELEMENT.addEventListener('mousedown', function(e) {
     resetSlider();
   });
 });
+
+ENDGAME_ELEMENT.addEventListener('touchstart', function(e) {
+  if (event.which != 1) {
+    return;
+  }
+  ENDGAME_ELEMENT.removeAttribute('reset');
+  var startX = e.changedTouches.item(0).pageX;
+  var startWidth = ENDGAME_ELEMENT.offsetWidth;
+  registerEventListener(BODY, {
+    event: 'touchmove',
+    callback: function(e) {
+      ENDGAME_ELEMENT.style.width = startWidth + (e.changedTouches.item(0).pageX - startX) + 'px';
+      if (ENDGAME_ELEMENT.offsetWidth >= BODY.offsetWidth) endGame();
+    }
+  });
+
+  BODY.addEventListener('touchend', function(e) {
+    if (event.which != 1) {
+      return;
+    }
+    unRegisterAllEventListeners(BODY);
+    resetSlider();
+  });
+});
