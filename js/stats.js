@@ -4,8 +4,8 @@ var DRAG_ELEMENT = document.getElementById('dragElement');
 var UNDO_ELEMENT = document.getElementById('undoElement');
 var ENDGAME_ELEMENT = document.getElementById('endgameElement');
 
-var dragAmount;
-var lastDragAmount;
+var dragAmount = 0;
+var lastDragAmount = 0;
 var undoHistory = [];
 
 window.mobileAndTabletcheck = function() {
@@ -41,14 +41,18 @@ if (IS_MOBILE) {
 
 var dragChangeElements = document.getElementsByClassName('dragChange');
 for (dragChangeElement of dragChangeElements) {
-  if (IS_MOBILE) {
-    addMobileDragFeature(dragChangeElement);
-  } else {
-    addDragFeature(dragChangeElement);
+  if (dragChangeElement.classList.contains('commanderDmg')) {
+    var lifeElement = dragChangeElement.parentElement.parentElement.children[0].children[1];
   }
+  if (IS_MOBILE) {
+    addMobileDragFeature(dragChangeElement, lifeElement);
+  } else {
+    addDragFeature(dragChangeElement, lifeElement);
+  }
+  lifeElement = null;
 }
 
-function addDragFeature(element) {
+function addDragFeature(element, linkedElement) {
   element.addEventListener('mousedown', function(e) {
     if (event.which != 1) {
       return;
@@ -56,13 +60,27 @@ function addDragFeature(element) {
     var startY = e.pageY;
     var startValue = Number(element.innerHTML);
     pushUndo(element, startValue);
+
+    if (linkedElement != null) {
+      var linkedStartValue = Number(linkedElement.innerHTML);
+      pushUndo(linkedElement, linkedStartValue);
+    }
+
     BODY.style.cursor = 'none';
     DRAG_ELEMENT.style.display = '';
+    DRAG_ELEMENT.innerHTML = dragAmount;
+    DRAG_ELEMENT.style.left = (e.pageX - DRAG_ELEMENT.offsetWidth / 2) + 'px';
+    DRAG_ELEMENT.style.top = (e.pageY - DRAG_ELEMENT.offsetHeight / 2) + 'px';
+    DRAG_ELEMENT.setAttribute('positive', 'true');
+
     BODY.onmousemove = function(e) {
       dragAmount = Math.floor((startY - e.pageY) / DRAG_SENSITIVITY);
       if (dragAmount != lastDragAmount) new Audio('mp3/click.mp3').play();
       lastDragAmount = dragAmount;
       element.innerHTML = startValue + dragAmount;
+      if (linkedElement != null) {
+        linkedElement.innerHTML = linkedStartValue - dragAmount;
+      }
       if (dragAmount >= 0) {
         DRAG_ELEMENT.setAttribute('positive', '');
       } else {
@@ -81,6 +99,7 @@ function addDragFeature(element) {
     DRAG_ELEMENT.style.display = 'none';
     BODY.onmousemove = null
     BODY.style.cursor = null;
+    dragAmount = 0;
   });
 }
 
@@ -108,11 +127,17 @@ function unRegisterAllEventListeners(obj) {
 	obj._eventListeners = [];
 }
 
-function addMobileDragFeature(element) {
+function addMobileDragFeature(element, linkedElement) {
   element.addEventListener('touchstart', function(e) {
     var startY = e.changedTouches.item(0).pageY;
     var startValue = Number(element.innerHTML);
     pushUndo(element, startValue);
+
+    if (linkedElement != null) {
+      var linkedStartValue = Number(linkedElement.innerHTML);
+      pushUndo(linkedElement, linkedStartValue);
+    }
+
     BODY.style.cursor = 'none';
     DRAG_ELEMENT.style.display = '';
     UNDO_ELEMENT.style.display = 'none';
@@ -123,6 +148,9 @@ function addMobileDragFeature(element) {
         if (dragAmount != lastDragAmount) new Audio('mp3/click.mp3').play();
         lastDragAmount = dragAmount;
         element.innerHTML = startValue + dragAmount;
+        if (linkedElement != null) {
+          linkedElement.innerHTML = linkedStartValue - dragAmount;
+        }
         if (dragAmount >= 0) {
           DRAG_ELEMENT.setAttribute('positive', '');
         } else {
