@@ -3,6 +3,8 @@ var BODY = document.getElementById('body');
 var DRAG_ELEMENT = document.getElementById('dragElement');
 var UNDO_ELEMENT = document.getElementById('undoElement');
 var ENDGAME_ELEMENT = document.getElementById('endgameElement');
+var PLAYERS = document.getElementById('meta_players').getAttribute('content');
+var PLAYERCOLORS = ['red', 'blue', 'teal', 'orange'];
 
 var dragAmount = 0;
 var lastDragAmount = 0;
@@ -174,9 +176,13 @@ function addMobileDragFeature(element, linkedElement) {
 }
 
 function endGame() {
-  var playerNameRed = prompt('Player Red name?', 'Red');
-  var playerNameBlue = prompt('Player Blue name?', 'Blue');
-  var winner = prompt('Winner?', '0');
+  var playerNames = [];
+  for (var i = 0; i < PLAYERS; i++) {
+    playerNames[i] = prompt('Player ' + PLAYERCOLORS[i] + ' name?', PLAYERCOLORS[i]);
+    if (playerNames[i] == null) return;
+  }
+  var winner = prompt('Winner? (0-' + (PLAYERS - 1) + ')', '0');
+  if (winner == null) return;
   winner = Number(winner);
   var matches = COOKIE.get('matches');
   if (matches == '') {
@@ -189,6 +195,7 @@ function endGame() {
   });
   var matchesString = JSON.stringify(matches);
   COOKIE.set('matches', matchesString, 1);
+  window.location.href = 'history.html';
 }
 
 function resetSlider() {
@@ -208,7 +215,7 @@ ENDGAME_ELEMENT.addEventListener('mousedown', function(e) {
   var startWidth = ENDGAME_ELEMENT.offsetWidth;
   BODY.onmousemove = function(e) {
     ENDGAME_ELEMENT.style.width = startWidth + (e.pageX - startX) + 'px';
-    if (ENDGAME_ELEMENT.offsetWidth >= BODY.offsetWidth) alert('Game over!');
+    if (ENDGAME_ELEMENT.offsetWidth >= BODY.offsetWidth) endGame();
   };
 
   BODY.addEventListener('mouseup', function(e) {
