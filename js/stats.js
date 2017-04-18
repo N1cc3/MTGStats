@@ -61,7 +61,7 @@ function addDragFeature(element) {
       dragAmount = Math.floor((startY - e.pageY) / DRAG_SENSITIVITY);
       element.innerHTML = startValue + dragAmount;
       if (dragAmount >= 0) {
-        DRAG_ELEMENT.setAttribute('positive', 'true');
+        DRAG_ELEMENT.setAttribute('positive', '');
       } else {
         DRAG_ELEMENT.removeAttribute('positive');
       }
@@ -119,7 +119,7 @@ function addMobileDragFeature(element) {
         dragAmount = Math.floor((startY - e.changedTouches.item(0).pageY) / DRAG_SENSITIVITY);
         element.innerHTML = startValue + dragAmount;
         if (dragAmount >= 0) {
-          DRAG_ELEMENT.setAttribute('positive', 'true');
+          DRAG_ELEMENT.setAttribute('positive', '');
         } else {
           DRAG_ELEMENT.removeAttribute('positive');
         }

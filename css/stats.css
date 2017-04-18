@@ -47,16 +47,16 @@
   cursor: s-resize;
 }
 
-.player.red {
+.player[player='0'] {
   background: radial-gradient(rgba(255,0,0,0.5) 0%, rgba(255,0,0,0.4) 40%, rgba(255,0,0,0.0) 70%);
 }
-.player.blue {
+.player[player='1'] {
   background: radial-gradient(rgba(0,0,255,0.5) 0%, rgba(0,0,255,0.4) 40%, rgba(0,0,255,0.0) 70%);
 }
-.player.teal {
+.player[player='2'] {
   background: radial-gradient(rgba(0,255,255,0.5) 0%, rgba(0,255,255,0.4) 40%, rgba(0,255,255,0.0) 70%);
 }
-.player.orange {
+.player[player='3'] {
   background: radial-gradient(rgba(255,165,0,0.5) 0%, rgba(255,165,0,0.4) 40%, rgba(255,165,0,0.0) 70%);
 }
 
@@ -71,16 +71,16 @@
   font-size: 0.7em;
 }
 
-.commanderDmg.red {
+.commanderDmg[player='0'] {
   color: rgb(255,120,120);
 }
-.commanderDmg.blue {
+.commanderDmg[player='1'] {
   color: rgb(120,120,255);
 }
-.commanderDmg.teal {
+.commanderDmg[player='2'] {
   color: rgb(120,255,255);
 }
-.commanderDmg.orange {
+.commanderDmg[player='3'] {
   color: rgb(255,200,120);
 }
 
@@ -117,7 +117,7 @@
   font-size: 0.5em;
   color: red; /* Default is negative. */
 }
-.dragElement[positive='true'] {
+.dragElement[positive] {
   color: lightgreen;
 }
 
