@@ -190,7 +190,7 @@ function endGame() {
   }
   matches = JSON.parse(matches);
   matches.push({
-    "players": [playerNameRed, playerNameBlue],
+    "players": playerNames,
     "winner": winner
   });
   var matchesString = JSON.stringify(matches);
