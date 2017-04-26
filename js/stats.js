@@ -17,6 +17,12 @@ window.mobileAndTabletcheck = function() {
 };
 var IS_MOBILE = window.mobileAndTabletcheck();
 
+if (IS_MOBILE) {
+  document.ontouchmove = function(event){
+    event.preventDefault();
+  }
+}
+
 function pushUndo(element, amount) {
   undoHistory.push({'element': element, 'amount': amount});
 }
