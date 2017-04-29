@@ -44,7 +44,18 @@
   font-size: 2em;
   margin-top: -0.25em;
   font-weight: bold;
-  cursor: s-resize;
+}
+
+.lowHealth {
+  animation-name: lowHealth;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes lowHealth {
+  to {color: pink;}
 }
 
 .player[player='0'] {
