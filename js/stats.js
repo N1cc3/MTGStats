@@ -5,6 +5,7 @@ var UNDO_ELEMENT = document.getElementById('undoElement');
 var ENDGAME_ELEMENT = document.getElementById('endgameElement');
 var PLAYERS = document.getElementById('meta_players').getAttribute('content');
 var PLAYERCOLORS = ['red', 'blue', 'teal', 'orange'];
+var LOW_HEALTH = 10;
 
 var dragAmount = 0;
 var lastDragAmount = 0;
@@ -44,6 +45,15 @@ if (IS_MOBILE) {
     var evtobj = window.event? event : e;
     if (evtobj.keyCode == 90 && evtobj.ctrlKey) popUndo();
     if (evtobj.keyCode == 13) endGame();
+  }
+}
+
+function lowHealth(lifeElement) {
+  var health = Number(lifeElement.innerHTML);
+  if (health <= LOW_HEALTH) {
+    lifeElement.setAttribute('lowHealth', 'true');
+  } else {
+    lifeElement.removeAttribute('lowHealth');
   }
 }
 
@@ -103,6 +113,9 @@ function addDragFeature(element, linkedElement) {
   BODY.addEventListener('mouseup', function(e) {
     if (event.which != 1) {
       return;
+    }
+    if (element.classList.contains('life')) {
+      lowHealth(element);
     }
     DRAG_ELEMENT.style.display = 'none';
     BODY.onmousemove = null
