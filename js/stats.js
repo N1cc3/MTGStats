@@ -183,6 +183,9 @@ function addMobileDragFeature(element, linkedElement) {
   });
 
   BODY.addEventListener('touchend', function(e) {
+    if (element.classList.contains('life')) {
+      lowHealth(element);
+    }
     DRAG_ELEMENT.style.display = 'none';
     if (undoHistory.length == 0) {
       UNDO_ELEMENT.style.display = 'none';
