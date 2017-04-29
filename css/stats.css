@@ -46,7 +46,7 @@
   font-weight: bold;
 }
 
-.lowHealth {
+.life[lowHealth='true'] {
   animation-name: lowHealth;
   animation-duration: 1s;
   animation-timing-function: linear;
