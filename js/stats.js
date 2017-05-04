@@ -10,6 +10,7 @@ var LOW_HEALTH = 10;
 var dragAmount = 0;
 var lastDragAmount = 0;
 var undoHistory = [];
+var endGameTriggered = false;
 
 window.mobileAndTabletcheck = function() {
   var check = false;
@@ -198,10 +199,17 @@ function addMobileDragFeature(element, linkedElement) {
 }
 
 function endGame() {
+  if (endGameTriggered == true) {
+    return;
+  }
+  endGameTriggered = true;
   var playerNames = [];
   for (var i = 0; i < PLAYERS; i++) {
     playerNames[i] = prompt('Player ' + PLAYERCOLORS[i] + ' name?', PLAYERCOLORS[i]);
-    if (playerNames[i] == null) return;
+    if (playerNames[i] == null) {
+      endGameTriggered = false;
+      return;
+    }
   }
   var winner = prompt('Winner? (0-' + (PLAYERS - 1) + ')', '0');
   if (winner == null) return;
