@@ -21,8 +21,8 @@
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="manifest" href="manifest.json">
 
-    <link rel="stylesheet" href="css/master.css">
-    <link rel="stylesheet" href="css/stats.css">
+    <link rel="stylesheet" media="all" href="css/master.css">
+    <link rel="stylesheet" media="all" href="css/stats.css">
 
     <meta id="meta_players" name="players" content="4">
   </head>
@@ -87,6 +87,10 @@
 
       </div>
 
+      <div id="dragElement" class="dragElement" style="display: none;"></div>
+
+      <div id="undoElement" class="undoElement" style="display: none;"></div>
+
     </div>
 
     <div class="sliderBox">
@@ -94,10 +98,6 @@
         Slide to record game >>
       </div>
     </div>
-
-    <div id="dragElement" class="dragElement" style="display: none;"></div>
-
-    <div id="undoElement" class="undoElement" style="display: none;"></div>
 
   </body>
 

@@ -5,10 +5,12 @@ var UNDO_ELEMENT = document.getElementById('undoElement');
 var ENDGAME_ELEMENT = document.getElementById('endgameElement');
 var PLAYERS = document.getElementById('meta_players').getAttribute('content');
 var PLAYERCOLORS = ['red', 'blue', 'teal', 'orange'];
+var LOW_HEALTH = 10;
 
 var dragAmount = 0;
 var lastDragAmount = 0;
 var undoHistory = [];
+var endGameTriggered = false;
 
 window.mobileAndTabletcheck = function() {
   var check = false;
@@ -16,6 +18,12 @@ window.mobileAndTabletcheck = function() {
   return check;
 };
 var IS_MOBILE = window.mobileAndTabletcheck();
+
+if (IS_MOBILE) {
+  document.ontouchmove = function(event){
+    event.preventDefault();
+  }
+}
 
 function pushUndo(element, amount) {
   undoHistory.push({'element': element, 'amount': amount});
@@ -40,6 +48,19 @@ if (IS_MOBILE) {
     if (evtobj.keyCode == 13) endGame();
   }
 }
+
+function lowHealth(lifeElement) {
+  var health = Number(lifeElement.innerHTML);
+  if (health <= LOW_HEALTH) {
+    lifeElement.setAttribute('lowHealth', 'true');
+  } else {
+    lifeElement.removeAttribute('lowHealth');
+  }
+}
+
+//////////////////////////
+// DRAGCHANGE ELEMENTS  //
+//////////////////////////
 
 var dragChangeElements = document.getElementsByClassName('dragChange');
 for (dragChangeElement of dragChangeElements) {
@@ -97,6 +118,9 @@ function addDragFeature(element, linkedElement) {
   BODY.addEventListener('mouseup', function(e) {
     if (event.which != 1) {
       return;
+    }
+    if (element.classList.contains('life')) {
+      lowHealth(element);
     }
     DRAG_ELEMENT.style.display = 'none';
     BODY.onmousemove = null
@@ -164,6 +188,9 @@ function addMobileDragFeature(element, linkedElement) {
   });
 
   BODY.addEventListener('touchend', function(e) {
+    if (element.classList.contains('life')) {
+      lowHealth(element);
+    }
     DRAG_ELEMENT.style.display = 'none';
     if (undoHistory.length == 0) {
       UNDO_ELEMENT.style.display = 'none';
@@ -175,11 +202,22 @@ function addMobileDragFeature(element, linkedElement) {
   });
 }
 
+//////////////////////////
+//    ENDGAME SLIDER    //
+//////////////////////////
+
 function endGame() {
+  if (endGameTriggered == true) {
+    return;
+  }
+  endGameTriggered = true;
   var playerNames = [];
   for (var i = 0; i < PLAYERS; i++) {
     playerNames[i] = prompt('Player ' + PLAYERCOLORS[i] + ' name?', PLAYERCOLORS[i]);
-    if (playerNames[i] == null) return;
+    if (playerNames[i] == null) {
+      endGameTriggered = false;
+      return;
+    }
   }
   var winner = prompt('Winner? (0-' + (PLAYERS - 1) + ')', '0');
   if (winner == null) return;
@@ -190,7 +228,7 @@ function endGame() {
   }
   matches = JSON.parse(matches);
   matches.push({
-    "players": [playerNameRed, playerNameBlue],
+    "players": playerNames,
     "winner": winner
   });
   var matchesString = JSON.stringify(matches);
@@ -199,11 +237,11 @@ function endGame() {
 }
 
 function resetSlider() {
-  ENDGAME_ELEMENT.setAttribute('reset', '');
-  ENDGAME_ELEMENT.addEventListener('transitionend', function(e) {
-    ENDGAME_ELEMENT.removeAttribute('reset');
-  });
-  ENDGAME_ELEMENT.style.removeProperty('width');
+    ENDGAME_ELEMENT.setAttribute('reset', '');
+    ENDGAME_ELEMENT.addEventListener('transitionend', function(e) {
+      ENDGAME_ELEMENT.removeAttribute('reset');
+    });
+    ENDGAME_ELEMENT.style.removeProperty('width');
 }
 
 ENDGAME_ELEMENT.addEventListener('mousedown', function(e) {
@@ -215,7 +253,11 @@ ENDGAME_ELEMENT.addEventListener('mousedown', function(e) {
   var startWidth = ENDGAME_ELEMENT.offsetWidth;
   BODY.onmousemove = function(e) {
     ENDGAME_ELEMENT.style.width = startWidth + (e.pageX - startX) + 'px';
-    if (ENDGAME_ELEMENT.offsetWidth >= BODY.offsetWidth) endGame();
+    if (ENDGAME_ELEMENT.offsetWidth >= BODY.offsetWidth) {
+      endGame();
+      resetSlider();
+      BODY.onmousemove = null
+    }
   };
 
   BODY.addEventListener('mouseup', function(e) {
@@ -235,15 +277,16 @@ ENDGAME_ELEMENT.addEventListener('touchstart', function(e) {
     event: 'touchmove',
     callback: function(e) {
       ENDGAME_ELEMENT.style.width = startWidth + (e.changedTouches.item(0).pageX - startX) + 'px';
-      if (ENDGAME_ELEMENT.offsetWidth >= BODY.offsetWidth) endGame();
+      if (ENDGAME_ELEMENT.offsetWidth >= BODY.offsetWidth) {
+        endGame();
+        resetSlider();
+        unRegisterAllEventListeners(BODY);
+      }
     }
   });
 
   BODY.addEventListener('touchend', function(e) {
-    if (event.which != 1) {
-      return;
-    }
-    unRegisterAllEventListeners(BODY);
     resetSlider();
+    unRegisterAllEventListeners(BODY);
   });
 });
