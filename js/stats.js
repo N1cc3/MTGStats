@@ -31,9 +31,11 @@ function pushUndo(element, amount) {
 
 function popUndo() {
   var undoObject = undoHistory.pop();
-  undoObject.element.innerHTML = undoObject.amount;
-  if (undoHistory.length == 0) {
-    UNDO_ELEMENT.style.display = 'none';
+  if (undoObject) {
+    undoObject.element.innerHTML = undoObject.amount;
+    if (undoHistory.length == 0) {
+      UNDO_ELEMENT.style.display = 'none';
+    }
   }
 }
 
