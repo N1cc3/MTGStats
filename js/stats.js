@@ -203,6 +203,7 @@ function endGame() {
     return;
   }
   endGameTriggered = true;
+  resetSlider();
   var playerNames = [];
   for (var i = 0; i < PLAYERS; i++) {
     playerNames[i] = prompt('Player ' + PLAYERCOLORS[i] + ' name?', PLAYERCOLORS[i]);
@@ -229,11 +230,11 @@ function endGame() {
 }
 
 function resetSlider() {
-  ENDGAME_ELEMENT.setAttribute('reset', '');
-  ENDGAME_ELEMENT.addEventListener('transitionend', function(e) {
-    ENDGAME_ELEMENT.removeAttribute('reset');
-  });
-  ENDGAME_ELEMENT.style.removeProperty('width');
+    ENDGAME_ELEMENT.setAttribute('reset', '');
+    ENDGAME_ELEMENT.addEventListener('transitionend', function(e) {
+      ENDGAME_ELEMENT.removeAttribute('reset');
+    });
+    ENDGAME_ELEMENT.style.removeProperty('width');
 }
 
 ENDGAME_ELEMENT.addEventListener('mousedown', function(e) {
@@ -270,10 +271,7 @@ ENDGAME_ELEMENT.addEventListener('touchstart', function(e) {
   });
 
   BODY.addEventListener('touchend', function(e) {
-    if (event.which != 1) {
-      return;
-    }
-    unRegisterAllEventListeners(BODY);
     resetSlider();
+    unRegisterAllEventListeners(BODY);
   });
 });
