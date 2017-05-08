@@ -58,6 +58,10 @@ function lowHealth(lifeElement) {
   }
 }
 
+//////////////////////////
+// DRAGCHANGE ELEMENTS  //
+//////////////////////////
+
 var dragChangeElements = document.getElementsByClassName('dragChange');
 for (dragChangeElement of dragChangeElements) {
   if (dragChangeElement.classList.contains('commanderDmg')) {
@@ -198,12 +202,15 @@ function addMobileDragFeature(element, linkedElement) {
   });
 }
 
+//////////////////////////
+//    ENDGAME SLIDER    //
+//////////////////////////
+
 function endGame() {
   if (endGameTriggered == true) {
     return;
   }
   endGameTriggered = true;
-  resetSlider();
   var playerNames = [];
   for (var i = 0; i < PLAYERS; i++) {
     playerNames[i] = prompt('Player ' + PLAYERCOLORS[i] + ' name?', PLAYERCOLORS[i]);
@@ -246,7 +253,11 @@ ENDGAME_ELEMENT.addEventListener('mousedown', function(e) {
   var startWidth = ENDGAME_ELEMENT.offsetWidth;
   BODY.onmousemove = function(e) {
     ENDGAME_ELEMENT.style.width = startWidth + (e.pageX - startX) + 'px';
-    if (ENDGAME_ELEMENT.offsetWidth >= BODY.offsetWidth) endGame();
+    if (ENDGAME_ELEMENT.offsetWidth >= BODY.offsetWidth) {
+      endGame();
+      resetSlider();
+      BODY.onmousemove = null
+    }
   };
 
   BODY.addEventListener('mouseup', function(e) {
@@ -266,7 +277,11 @@ ENDGAME_ELEMENT.addEventListener('touchstart', function(e) {
     event: 'touchmove',
     callback: function(e) {
       ENDGAME_ELEMENT.style.width = startWidth + (e.changedTouches.item(0).pageX - startX) + 'px';
-      if (ENDGAME_ELEMENT.offsetWidth >= BODY.offsetWidth) endGame();
+      if (ENDGAME_ELEMENT.offsetWidth >= BODY.offsetWidth) {
+        endGame();
+        resetSlider();
+        unRegisterAllEventListeners(BODY);
+      }
     }
   });
 
