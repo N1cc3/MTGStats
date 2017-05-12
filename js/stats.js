@@ -7,19 +7,12 @@ var PLAYERS = document.getElementById('meta_players').getAttribute('content');
 var PLAYERCOLORS = ['red', 'blue', 'teal', 'orange'];
 var LOW_HEALTH = 10;
 
-var SVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-SVG.style = 'position: absolute; top: 0; left: 0;';
-SVG.setAttribute('width', '100%');
-SVG.setAttribute('height', '100%');
-SVG.setAttribute('version', '1.1');
-
-var LINE = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-LINE.style = 'stroke:lightblue;stroke-width:2;';
-
 var dragAmount = 0;
 var lastDragAmount = 0;
 var undoHistory = [];
 var endGameTriggered = false;
+
+DRAW.setParent(BODY);
 
 window.mobileAndTabletcheck = function() {
   var check = false;
@@ -91,8 +84,8 @@ function addDragFeature(element, linkedElement) {
     if (event.which != 1) {
       return;
     }
-    var startY = element.offsetLeft + element.offsetWidth / 2;
-    var startX = element.offsetTop + element.offsetHeight / 2;
+    var startX = element.offsetLeft + element.offsetWidth / 2;
+    var startY = element.offsetTop + element.offsetHeight / 2;
     var startValue = Number(element.innerHTML);
     pushUndo(element, startValue);
 
@@ -108,16 +101,12 @@ function addDragFeature(element, linkedElement) {
     DRAG_ELEMENT.style.top = (e.pageY - DRAG_ELEMENT.offsetHeight / 2) + 'px';
     DRAG_ELEMENT.setAttribute('positive', 'true');
 
-    LINE.setAttribute('y1', startX);
-    LINE.setAttribute('x1', startY);
-    LINE.setAttribute('x2', e.pageX);
-    LINE.setAttribute('y2', e.pageY);
-    SVG.appendChild(LINE);
-    BODY.appendChild(SVG);
+    DRAW.show();
+    var line = DRAW.createLine('lightblue', 2);
+    DRAW.moveLine(line, startX, startY, e.pageX, e.pageY);
 
     BODY.onmousemove = function(e) {
-      LINE.setAttribute('x2', e.pageX);
-      LINE.setAttribute('y2', e.pageY);
+      DRAW.moveLine(line, startX, startY, e.pageX, e.pageY);
       dragAmount = Math.floor((startY - e.pageY) / DRAG_SENSITIVITY);
       if (dragAmount != lastDragAmount) new Audio('mp3/click.mp3').play();
       lastDragAmount = dragAmount;
@@ -137,20 +126,17 @@ function addDragFeature(element, linkedElement) {
   });
 
   BODY.addEventListener('mouseup', function(e) {
-    if (event.which != 1) {
+    if (event.which != 1 && currentElement != element) {
       return;
     }
     if (element.classList.contains('life')) {
       lowHealth(element);
     }
+    DRAW.hide();
     DRAG_ELEMENT.style.display = 'none';
     BODY.onmousemove = null;
     BODY.style.cursor = null;
     dragAmount = 0;
-    if (SVG.hasChildNodes()) {
-      SVG.removeChild(LINE);
-      BODY.removeChild(SVG);
-    }
   });
 }
 
