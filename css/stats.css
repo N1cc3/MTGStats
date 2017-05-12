@@ -23,20 +23,29 @@
   align-items: center;
 }
 
+.player[player='0'] {
+  background: radial-gradient(rgba(255, 0, 0, 0.5) 0%, rgba(255, 0, 0, 0.4) 40%, rgba(255, 0, 0, 0) 70%);
+}
+
+.player[player='1'] {
+  background: radial-gradient(rgba(0, 0, 255, 0.5) 0%, rgba(0, 0, 255, 0.4) 40%, rgba(0, 0, 255, 0) 70%);
+}
+
+.player[player='2'] {
+  background: radial-gradient(rgba(0, 255, 255, 0.5) 0%, rgba(0, 255, 255, 0.4) 40%, rgba(0, 255, 255, 0) 70%);
+}
+
+.player[player='3'] {
+  background: radial-gradient(rgba(255, 165, 0, 0.5) 0%, rgba(255, 165, 0, 0.4) 40%, rgba(255, 165, 0, 0) 70%);
+}
+
+
 .lifeBox {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   justify-content: space-around;
   align-items: center;
-}
-
-.infect {
-  color: darkgreen;
-  background-image: url('../img/infect.png');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
 }
 
 .life {
@@ -55,21 +64,20 @@
 }
 
 @keyframes lowHealth {
-  to {color: pink;}
+  to {
+    color: pink;
+  }
 }
 
-.player[player='0'] {
-  background: radial-gradient(rgba(255,0,0,0.5) 0%, rgba(255,0,0,0.4) 40%, rgba(255,0,0,0.0) 70%);
+
+.infect {
+  color: darkgreen;
+  background-image: url('../img/infect.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
 }
-.player[player='1'] {
-  background: radial-gradient(rgba(0,0,255,0.5) 0%, rgba(0,0,255,0.4) 40%, rgba(0,0,255,0.0) 70%);
-}
-.player[player='2'] {
-  background: radial-gradient(rgba(0,255,255,0.5) 0%, rgba(0,255,255,0.4) 40%, rgba(0,255,255,0.0) 70%);
-}
-.player[player='3'] {
-  background: radial-gradient(rgba(255,165,0,0.5) 0%, rgba(255,165,0,0.4) 40%, rgba(255,165,0,0.0) 70%);
-}
+
 
 .commanderDmgColumn {
   display: flex;
@@ -83,20 +91,24 @@
 }
 
 .commanderDmg[player='0'] {
-  color: rgb(255,120,120);
-}
-.commanderDmg[player='1'] {
-  color: rgb(120,120,255);
-}
-.commanderDmg[player='2'] {
-  color: rgb(120,255,255);
-}
-.commanderDmg[player='3'] {
-  color: rgb(255,200,120);
+  color: rgb(255, 120, 120);
 }
 
+.commanderDmg[player='1'] {
+  color: rgb(120, 120, 255);
+}
+
+.commanderDmg[player='2'] {
+  color: rgb(120, 255, 255);
+}
+
+.commanderDmg[player='3'] {
+  color: rgb(255, 200, 120);
+}
+
+
 .sliderBox {
-  height: 6%
+  height: 6%;
 }
 
 .slider {
@@ -119,6 +131,7 @@
   transition-duration: 0.5s;
 }
 
+
 .dragChange {
   cursor: ns-resize;
 }
@@ -128,9 +141,11 @@
   font-size: 0.5em;
   color: red; /* Default is negative. */
 }
+
 .dragElement[positive] {
   color: lightgreen;
 }
+
 
 .undoElement {
   position: absolute;
