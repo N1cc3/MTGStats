@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */
+
 var DRAW = (function() {
   var SVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   SVG.style = 'position: absolute; top: 0; left: 0;';

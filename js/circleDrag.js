@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */
+
 var DRAG_SENSITIVITY = 0.5; // Radians per tick
 
 function angleBetween(x1, y1, x2, y2) {
@@ -17,7 +19,7 @@ function addDragFeature(element, linkedElement) {
     var startValue = Number(element.innerHTML);
     pushUndo(element, startValue);
 
-    if (linkedElement != null) {
+    if (linkedElement !== null) {
       var linkedStartValue = Number(linkedElement.innerHTML);
       pushUndo(linkedElement, linkedStartValue);
     }
@@ -34,7 +36,7 @@ function addDragFeature(element, linkedElement) {
       if (dragAmount != lastDragAmount) new Audio('mp3/click.mp3').play();
       lastDragAmount = dragAmount;
       element.innerHTML = startValue + dragAmount;
-      if (linkedElement != null) {
+      if (linkedElement !== null) {
         linkedElement.innerHTML = linkedStartValue - dragAmount;
       }
       if (dragAmount >= 0) {
@@ -45,7 +47,7 @@ function addDragFeature(element, linkedElement) {
       DRAG_ELEMENT.innerHTML = dragAmount;
       DRAG_ELEMENT.style.left = (e.pageX - DRAG_ELEMENT.offsetWidth / 2) + 'px';
       DRAG_ELEMENT.style.top = (e.pageY - DRAG_ELEMENT.offsetHeight / 2) + 'px';
-    }
+    };
   });
 
   BODY.addEventListener('mouseup', function(e) {
@@ -53,7 +55,7 @@ function addDragFeature(element, linkedElement) {
       return;
     }
     DRAG_ELEMENT.style.display = 'none';
-    BODY.onmousemove = null
+    BODY.onmousemove = null;
     BODY.style.cursor = null;
     dragAmount = 0;
   });
