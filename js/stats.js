@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */
+
 var DRAG_SENSITIVITY = 20;
 var BODY = document.getElementById('body');
 var DRAG_ELEMENT = document.getElementById('dragElement');
@@ -22,9 +24,9 @@ window.mobileAndTabletcheck = function() {
 var IS_MOBILE = window.mobileAndTabletcheck();
 
 if (IS_MOBILE) {
-  document.ontouchmove = function(event){
+  document.ontouchmove = function(event) {
     event.preventDefault();
-  }
+  };
 }
 
 function pushUndo(element, amount) {
@@ -35,7 +37,7 @@ function popUndo() {
   var undoObject = undoHistory.pop();
   if (undoObject) {
     undoObject.element.innerHTML = undoObject.amount;
-    if (undoHistory.length == 0) {
+    if (undoHistory.length === 0) {
       UNDO_ELEMENT.style.display = 'none';
     }
   }
@@ -50,7 +52,7 @@ if (IS_MOBILE) {
     var evtobj = window.event? event : e;
     if (evtobj.keyCode == 90 && evtobj.ctrlKey) popUndo();
     if (evtobj.keyCode == 13) endGame();
-  }
+  };
 }
 
 function lowHealth(lifeElement) {
@@ -67,7 +69,7 @@ function lowHealth(lifeElement) {
 //////////////////////////
 
 var dragChangeElements = document.getElementsByClassName('dragChange');
-for (dragChangeElement of dragChangeElements) {
+for (var dragChangeElement of dragChangeElements) {
   if (dragChangeElement.classList.contains('commanderDmg')) {
     var lifeElement = dragChangeElement.parentElement.parentElement.children[0].children[1];
   }
@@ -89,7 +91,7 @@ function addDragFeature(element, linkedElement) {
     var startValue = Number(element.innerHTML);
     pushUndo(element, startValue);
 
-    if (linkedElement != null) {
+    if (linkedElement !== null) {
       var linkedStartValue = Number(linkedElement.innerHTML);
       pushUndo(linkedElement, linkedStartValue);
     }
@@ -111,7 +113,7 @@ function addDragFeature(element, linkedElement) {
       if (dragAmount != lastDragAmount) new Audio('mp3/click.mp3').play();
       lastDragAmount = dragAmount;
       element.innerHTML = startValue + dragAmount;
-      if (linkedElement != null) {
+      if (linkedElement !== null) {
         linkedElement.innerHTML = linkedStartValue - dragAmount;
       }
       if (dragAmount >= 0) {
@@ -122,7 +124,7 @@ function addDragFeature(element, linkedElement) {
       DRAG_ELEMENT.innerHTML = dragAmount;
       DRAG_ELEMENT.style.left = (e.pageX - DRAG_ELEMENT.offsetWidth / 2) + 'px';
       DRAG_ELEMENT.style.top = (e.pageY - DRAG_ELEMENT.offsetHeight / 2) + 'px';
-    }
+    };
   });
 
   BODY.addEventListener('mouseup', function(e) {
@@ -152,7 +154,7 @@ function registerEventListener(obj, params) {
 	obj._eventListeners = eventListeners;
 }
 function unRegisterAllEventListeners(obj) {
-	if ( typeof obj._eventListeners == 'undefined' || obj._eventListeners.length == 0 ) {
+	if ( typeof obj._eventListeners == 'undefined' || obj._eventListeners.length === 0 ) {
 		return;
 	}
 
@@ -170,7 +172,7 @@ function addMobileDragFeature(element, linkedElement) {
     var startValue = Number(element.innerHTML);
     pushUndo(element, startValue);
 
-    if (linkedElement != null) {
+    if (linkedElement !== null) {
       var linkedStartValue = Number(linkedElement.innerHTML);
       pushUndo(linkedElement, linkedStartValue);
     }
@@ -185,7 +187,7 @@ function addMobileDragFeature(element, linkedElement) {
         if (dragAmount != lastDragAmount) new Audio('mp3/click.mp3').play();
         lastDragAmount = dragAmount;
         element.innerHTML = startValue + dragAmount;
-        if (linkedElement != null) {
+        if (linkedElement !== null) {
           linkedElement.innerHTML = linkedStartValue - dragAmount;
         }
         if (dragAmount >= 0) {
@@ -203,7 +205,7 @@ function addMobileDragFeature(element, linkedElement) {
       lowHealth(element);
     }
     DRAG_ELEMENT.style.display = 'none';
-    if (undoHistory.length == 0) {
+    if (undoHistory.length === 0) {
       UNDO_ELEMENT.style.display = 'none';
     } else {
       UNDO_ELEMENT.style.display = '';
@@ -218,23 +220,23 @@ function addMobileDragFeature(element, linkedElement) {
 //////////////////////////
 
 function endGame() {
-  if (endGameTriggered == true) {
+  if (endGameTriggered === true) {
     return;
   }
   endGameTriggered = true;
   var playerNames = [];
   for (var i = 0; i < PLAYERS; i++) {
     playerNames[i] = prompt('Player ' + PLAYERCOLORS[i] + ' name?', PLAYERCOLORS[i]);
-    if (playerNames[i] == null) {
+    if (playerNames[i] === null) {
       endGameTriggered = false;
       return;
     }
   }
   var winner = prompt('Winner? (0-' + (PLAYERS - 1) + ')', '0');
-  if (winner == null) return;
+  if (winner === null) return;
   winner = Number(winner);
   var matches = COOKIE.get('matches');
-  if (matches == '') {
+  if (matches === '') {
     matches = '[]';
   }
   matches = JSON.parse(matches);
@@ -267,7 +269,7 @@ ENDGAME_ELEMENT.addEventListener('mousedown', function(e) {
     if (ENDGAME_ELEMENT.offsetWidth >= BODY.offsetWidth) {
       endGame();
       resetSlider();
-      BODY.onmousemove = null
+      BODY.onmousemove = null;
     }
   };
 
@@ -275,7 +277,7 @@ ENDGAME_ELEMENT.addEventListener('mousedown', function(e) {
     if (event.which != 1) {
       return;
     }
-    BODY.onmousemove = null
+    BODY.onmousemove = null;
     resetSlider();
   });
 });
