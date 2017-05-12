@@ -1,10 +1,12 @@
+/*jshint esversion: 6 */
+
 var matches = JSON.parse(COOKIE.get("matches"));
 
 function addMatches(matches) {
   var historyBox = document.getElementById('historyBox');
   var fragment = document.createDocumentFragment();
 
-  for (match of matches) {
+  for (var match of matches) {
     var matchElement = document.createElement('div');
     matchElement.className = 'match';
     var players = match.players;
