@@ -9,10 +9,9 @@ body {
   width: 90%;
   border-style: solid;
   border-color: white;
-  border-width: 2px;
+  border-width: 0.01em;
   border-radius: 0.2em;
-  background-color: rgba(0,0,0,0.5);
-
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
@@ -38,14 +37,17 @@ body {
 }
 
 .player[player='0'] {
-  color: rgb(255,0,0);
+  color: rgb(255, 0, 0);
 }
+
 .player[player='1'] {
-  color: rgb(0,0,255);
+  color: rgb(0, 0, 255);
 }
+
 .player[player='2'] {
-  color: rgb(0,255,255);
+  color: rgb(0, 255, 255);
 }
+
 .player[player='3'] {
-  color: rgb(255,165,0);
+  color: rgb(255, 165, 0);
 }
