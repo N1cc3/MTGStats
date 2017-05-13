@@ -80,15 +80,15 @@ function getDistance(x1, y1, x2, y2) {
 
 var dragChangeElements = document.getElementsByClassName('dragChange');
 for (var dragChangeElement of dragChangeElements) {
+  var lifeElement = null;
   if (dragChangeElement.classList.contains('commanderDmg')) {
-    var lifeElement = dragChangeElement.parentElement.parentElement.children[0].children[1];
+    lifeElement = dragChangeElement.parentElement.parentElement.children[0].children[1];
   }
   if (IS_MOBILE) {
     addMobileDragFeature(dragChangeElement, lifeElement);
   } else {
     addDragFeature(dragChangeElement, lifeElement);
   }
-  lifeElement = null;
 }
 
 function addDragFeature(element, linkedElement) {

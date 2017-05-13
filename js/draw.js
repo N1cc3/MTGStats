@@ -25,7 +25,9 @@ var DRAW = (function() {
 
   DRAW.hide = function() {
     if (parent) {
-      parent.removeChild(SVG);
+      if (SVG.parentNode == parent) {
+        parent.removeChild(SVG);
+      }
       while (SVG.firstChild) {
         SVG.removeChild(SVG.firstChild);
       }
