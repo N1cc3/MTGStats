@@ -115,10 +115,13 @@ function addDragFeature(element, linkedElement) {
 
     DRAW.show();
     var line = DRAW.createLine('lightblue', 2);
-    DRAW.moveLine(line, startX, startY, e.pageX, e.pageY);
+    DRAW.modifyLine(line, startX, startY, e.pageX, e.pageY);
+    var circle = DRAW.createCircle('lightblue', 2, 'lightblue', 0.2);
+    DRAW.modifyCircle(circle, startX, startY, getDistance(startX, startY, e.pageX, e.pageY));
 
     BODY.onmousemove = function(e) {
-      DRAW.moveLine(line, startX, startY, e.pageX, e.pageY);
+      DRAW.modifyLine(line, startX, startY, e.pageX, e.pageY);
+      DRAW.modifyCircle(circle, startX, startY, getDistance(startX, startY, e.pageX, e.pageY));
       dragAmount = Math.floor((startY - e.pageY) / DRAG_SENSITIVITY);
       if (dragAmount != lastDragAmount) new Audio('mp3/click.mp3').play();
       lastDragAmount = dragAmount;
