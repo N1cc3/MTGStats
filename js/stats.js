@@ -126,21 +126,22 @@ function addDragFeature(element, linkedElement) {
       DRAG_ELEMENT.style.top = (e.pageY - DRAG_ELEMENT.offsetHeight / 2) + 'px';
     };
   });
-
-  BODY.addEventListener('mouseup', function(e) {
-    if (event.which != 1 && currentElement != element) {
-      return;
-    }
-    if (element.classList.contains('life')) {
-      lowHealth(element);
-    }
-    DRAW.hide();
-    DRAG_ELEMENT.style.display = 'none';
-    BODY.onmousemove = null;
-    BODY.style.cursor = null;
-    dragAmount = 0;
-  });
 }
+
+var lifeElements = document.getElementsByClassName("life");
+BODY.addEventListener('mouseup', function(e) {
+  if (event.which != 1) {
+    return;
+  }
+  for (var lifeElement of lifeElements) {
+    lowHealth(lifeElement);
+  }
+  DRAW.hide();
+  DRAG_ELEMENT.style.display = 'none';
+  BODY.onmousemove = null;
+  BODY.style.cursor = null;
+  dragAmount = 0;
+});
 
 function registerEventListener(obj, params) {
 	if ( typeof obj._eventListeners == 'undefined' ) {
