@@ -96,6 +96,7 @@ function addDragFeature(element, linkedElement) {
     if (event.which != 1) {
       return;
     }
+    var triggered = false;
     var startX = element.offsetLeft + element.offsetWidth / 2;
     var startY = element.offsetTop + element.offsetHeight / 2;
     var startValue = Number(element.innerHTML);
@@ -120,8 +121,16 @@ function addDragFeature(element, linkedElement) {
     DRAW.modifyCircle(circle, startX, startY, getDistance(startX, startY, e.pageX, e.pageY));
 
     BODY.onmousemove = function(e) {
+      var distance = getDistance(startX, startY, e.pageX, e.pageY);
       DRAW.modifyLine(line, startX, startY, e.pageX, e.pageY);
-      DRAW.modifyCircle(circle, startX, startY, getDistance(startX, startY, e.pageX, e.pageY));
+      DRAW.modifyCircle(circle, startX, startY, distance);
+      if (!triggered) {
+        if (distance > 50) {
+          triggered = true;
+        } else {
+          return;
+        }
+      }
       dragAmount = Math.floor((startY - e.pageY) / DRAG_SENSITIVITY);
       if (dragAmount != lastDragAmount) new Audio('mp3/click.mp3').play();
       lastDragAmount = dragAmount;
