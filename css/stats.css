@@ -133,7 +133,7 @@
 
 
 .dragChange {
-  cursor: ns-resize;
+  cursor: -webkit-grab;
 }
 
 .dragElement {
