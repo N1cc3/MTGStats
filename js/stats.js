@@ -68,6 +68,17 @@ function getAngle(x1, y1, x2, y2) {
   return Math.atan2(x2 - x1, y2 - y1);
 }
 
+function getAngleDiff(a1, a2) {
+  var diff = a1 - a2;
+  if (diff > Math.PI) {
+    diff -= 2 * Math.PI;
+  }
+  if (diff < -Math.PI) {
+    diff += 2 * Math.PI;
+  }
+  return diff;
+}
+
 function getDistance(x1, y1, x2, y2) {
   var dx = x2 - x1;
   var dy = y2 - y1;
@@ -97,6 +108,7 @@ function addDragFeature(element, linkedElement) {
       return;
     }
     var triggered = false;
+    var startAngle;
     var startX = element.offsetLeft + element.offsetWidth / 2;
     var startY = element.offsetTop + element.offsetHeight / 2;
     var startValue = Number(element.innerHTML);
@@ -118,19 +130,21 @@ function addDragFeature(element, linkedElement) {
     var line = DRAW.createLine('lightblue', 2);
     DRAW.modifyLine(line, startX, startY, e.pageX, e.pageY);
     var circle = DRAW.createCircle('lightblue', 2, 'lightblue', 0.2);
-    DRAW.modifyCircle(circle, startX, startY, getDistance(startX, startY, e.pageX, e.pageY));
+    // DRAW.modifyCircle(circle, startX, startY, getDistance(startX, startY, e.pageX, e.pageY));
 
     BODY.onmousemove = function(e) {
       var distance = getDistance(startX, startY, e.pageX, e.pageY);
       DRAW.modifyLine(line, startX, startY, e.pageX, e.pageY);
-      DRAW.modifyCircle(circle, startX, startY, distance);
       if (!triggered) {
         if (distance > 50) {
           triggered = true;
+          startAngle = getAngle(startX, startY, e.pageX, e.pageY);
         } else {
           return;
         }
       }
+      var angleDiff = getAngleDiff(getAngle(startX, startY, e.pageX, e.pageY), startAngle);
+      DRAW.modifyCircle(circle, startX, startY, distance);
       dragAmount = Math.floor((startY - e.pageY) / DRAG_SENSITIVITY);
       if (dragAmount != lastDragAmount) new Audio('mp3/click.mp3').play();
       lastDragAmount = dragAmount;
