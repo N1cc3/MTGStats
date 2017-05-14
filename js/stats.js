@@ -1,6 +1,7 @@
 /*jshint esversion: 6 */
 
-var DRAG_SENSITIVITY = 20;
+var DRAG_SENSITIVITY = -1.2;
+var DRAG_TRIGGER_DISTANCE = 100;
 var BODY = document.getElementById('body');
 var DRAG_ELEMENT = document.getElementById('dragElement');
 var UNDO_ELEMENT = document.getElementById('undoElement');
@@ -120,11 +121,6 @@ function addDragFeature(element, linkedElement) {
     }
 
     BODY.style.cursor = 'none';
-    DRAG_ELEMENT.style.display = '';
-    DRAG_ELEMENT.innerHTML = dragAmount;
-    DRAG_ELEMENT.style.left = (e.pageX - DRAG_ELEMENT.offsetWidth / 2) + 'px';
-    DRAG_ELEMENT.style.top = (e.pageY - DRAG_ELEMENT.offsetHeight / 2) + 'px';
-    DRAG_ELEMENT.setAttribute('positive', 'true');
 
     DRAW.show();
     var line = DRAW.createLine('lightblue', 2);
@@ -136,18 +132,27 @@ function addDragFeature(element, linkedElement) {
       var distance = getDistance(startX, startY, e.pageX, e.pageY);
       DRAW.modifyLine(line, startX, startY, e.pageX, e.pageY);
       if (!triggered) {
-        if (distance > 50) {
+        if (distance > DRAG_TRIGGER_DISTANCE) {
           triggered = true;
           startAngle = getAngle(startX, startY, e.pageX, e.pageY);
+          DRAG_ELEMENT.style.display = '';
+          DRAG_ELEMENT.innerHTML = dragAmount;
+          DRAG_ELEMENT.style.left = (e.pageX - DRAG_ELEMENT.offsetWidth / 2) + 'px';
+          DRAG_ELEMENT.style.top = (e.pageY - DRAG_ELEMENT.offsetHeight / 2) + 'px';
+          DRAG_ELEMENT.setAttribute('positive', 'true');
+          new Audio('mp3/click.mp3').play();
         } else {
           return;
         }
       }
       var angleDiff = getAngleDiff(getAngle(startX, startY, e.pageX, e.pageY), startAngle);
       DRAW.modifyCircle(circle, startX, startY, distance);
-      dragAmount = Math.floor((startY - e.pageY) / DRAG_SENSITIVITY);
-      if (dragAmount != lastDragAmount) new Audio('mp3/click.mp3').play();
-      lastDragAmount = dragAmount;
+      dragAmount += Math.floor((angleDiff + DRAG_SENSITIVITY / 2) / DRAG_SENSITIVITY);
+      if (dragAmount != lastDragAmount) {
+        lastDragAmount = dragAmount;
+        new Audio('mp3/click.mp3').play();
+        startAngle = getAngle(startX, startY, e.pageX, e.pageY);
+      }
       element.innerHTML = startValue + dragAmount;
       if (linkedElement !== null) {
         linkedElement.innerHTML = linkedStartValue - dragAmount;
@@ -177,6 +182,7 @@ BODY.addEventListener('mouseup', function(e) {
   BODY.onmousemove = null;
   BODY.style.cursor = null;
   dragAmount = 0;
+  lastDragAmount = 0;
 });
 
 function registerEventListener(obj, params) {
