@@ -86,6 +86,19 @@ function getDistance(x1, y1, x2, y2) {
   return Math.sqrt(dx * dx + dy * dy);
 }
 
+function setColorByValue(element, value) {
+  if (value > 0) {
+    element.classList.add("positive");
+  } else {
+    element.classList.remove("positive");
+  }
+  if (value < 0) {
+    element.classList.add("negative");
+  } else {
+    element.classList.remove("negative");
+  }
+}
+
 //////////////////////////
 // DRAGCHANGE ELEMENTS  //
 //////////////////////////
@@ -157,11 +170,7 @@ function addDragFeature(element, linkedElement) {
       if (linkedElement !== null) {
         linkedElement.innerHTML = linkedStartValue - dragAmount;
       }
-      if (dragAmount >= 0) {
-        DRAG_ELEMENT.setAttribute('positive', '');
-      } else {
-        DRAG_ELEMENT.removeAttribute('positive');
-      }
+      setColorByValue(DRAG_ELEMENT, dragAmount);
       DRAG_ELEMENT.innerHTML = dragAmount;
       DRAG_ELEMENT.style.left = (e.pageX - DRAG_ELEMENT.offsetWidth / 2) + 'px';
       DRAG_ELEMENT.style.top = (e.pageY - DRAG_ELEMENT.offsetHeight / 2) + 'px';

@@ -139,11 +139,15 @@
 .dragElement {
   position: absolute;
   font-size: 0.5em;
-  color: red; /* Default is negative. */
+  color: yellow;
 }
 
-.dragElement[positive] {
+.positive {
   color: lightgreen;
+}
+
+.negative {
+  color: red;
 }
 
 
