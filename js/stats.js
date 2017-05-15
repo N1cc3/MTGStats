@@ -1,6 +1,6 @@
 /*jshint esversion: 6 */
 
-var DRAG_SENSITIVITY = -1.2;
+var DRAG_SENSITIVITY = -0.6;
 var DRAG_TRIGGER_DISTANCE = 100;
 var BODY = document.getElementById('body');
 var DRAG_ELEMENT = document.getElementById('dragElement');
@@ -69,15 +69,14 @@ function getAngle(x1, y1, x2, y2) {
   return Math.atan2(x2 - x1, y2 - y1);
 }
 
-function getAngleDiff(a1, a2) {
-  var diff = a1 - a2;
-  if (diff > Math.PI) {
-    diff -= 2 * Math.PI;
+function angleWrap(angle) {
+  if (angle > Math.PI) {
+    angle -= 2 * Math.PI;
   }
-  if (diff < -Math.PI) {
-    diff += 2 * Math.PI;
+  if (angle < -Math.PI) {
+    angle += 2 * Math.PI;
   }
-  return diff;
+  return angle;
 }
 
 function getDistance(x1, y1, x2, y2) {
@@ -139,11 +138,18 @@ function addDragFeature(element, linkedElement) {
     var line = DRAW.createLine('lightblue', 2);
     DRAW.modifyLine(line, startX, startY, e.pageX, e.pageY);
     var circle = DRAW.createCircle('lightblue', 2, 'lightblue', 0.2);
-    // DRAW.modifyCircle(circle, startX, startY, getDistance(startX, startY, e.pageX, e.pageY));
+
+    var texts = [];
+    var textOffsets = [-4, -3, -2, -1, 1, 2, 3, 4];
+    for (var textOffset of textOffsets) {
+      texts.push(DRAW.createText(textOffset, 40));
+    }
 
     BODY.onmousemove = function(e) {
+
       var distance = getDistance(startX, startY, e.pageX, e.pageY);
       DRAW.modifyLine(line, startX, startY, e.pageX, e.pageY);
+
       if (!triggered) {
         if (distance > DRAG_TRIGGER_DISTANCE) {
           triggered = true;
@@ -158,22 +164,44 @@ function addDragFeature(element, linkedElement) {
           return;
         }
       }
-      var angleDiff = getAngleDiff(getAngle(startX, startY, e.pageX, e.pageY), startAngle);
+
+      var currentAngle = getAngle(startX, startY, e.pageX, e.pageY);
+
       DRAW.modifyCircle(circle, startX, startY, distance);
+      for (var i = 0; i < textOffsets.length; i++) {
+        var offsetAngle = angleWrap(textOffsets[i] * DRAG_SENSITIVITY + 2.5 * DRAG_SENSITIVITY);
+        console.log("offsetAngle: " + offsetAngle);
+        var angle = -angleWrap(startAngle + offsetAngle);
+        var x = startX - 20 + 0.8 * distance * Math.cos(angle);
+        console.log("x: " + x);
+        var y = startY + 10 + 0.8 * distance * Math.sin(angle);
+        console.log("y: " + y);
+        DRAW.modifyText(texts[i], x, y, dragAmount + textOffsets[i]);
+      }
+
+      var angleDiff = angleWrap(currentAngle - startAngle);
       dragAmount += Math.floor((angleDiff + DRAG_SENSITIVITY / 2) / DRAG_SENSITIVITY);
+
       if (dragAmount != lastDragAmount) {
+        if (dragAmount > lastDragAmount) {
+          startAngle = angleWrap(startAngle + DRAG_SENSITIVITY);
+        } else {
+          startAngle = angleWrap(startAngle - DRAG_SENSITIVITY);
+        }
         lastDragAmount = dragAmount;
         new Audio('mp3/click.mp3').play();
-        startAngle = getAngle(startX, startY, e.pageX, e.pageY);
       }
+
       element.innerHTML = startValue + dragAmount;
       if (linkedElement !== null) {
         linkedElement.innerHTML = linkedStartValue - dragAmount;
       }
+
       setColorByValue(DRAG_ELEMENT, dragAmount);
       DRAG_ELEMENT.innerHTML = dragAmount;
       DRAG_ELEMENT.style.left = (e.pageX - DRAG_ELEMENT.offsetWidth / 2) + 'px';
       DRAG_ELEMENT.style.top = (e.pageY - DRAG_ELEMENT.offsetHeight / 2) + 'px';
+
     };
   });
 }

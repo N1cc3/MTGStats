@@ -1,7 +1,8 @@
 /*jshint esversion: 6 */
 
 var DRAW = (function() {
-  var SVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  var SVG_URL = 'http://www.w3.org/2000/svg';
+  var SVG = document.createElementNS(SVG_URL, 'svg');
   SVG.style = 'position: absolute; top: 0; left: 0;';
   SVG.setAttribute('width', '100%');
   SVG.setAttribute('height', '100%');
@@ -36,7 +37,7 @@ var DRAW = (function() {
 
 
   DRAW.createLine = function(color, width) {
-    var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    var line = document.createElementNS(SVG_URL, 'line');
     line.setAttribute('stroke', color);
     line.setAttribute('stroke-width', width);
     SVG.appendChild(line);
@@ -52,7 +53,7 @@ var DRAW = (function() {
 
 
   DRAW.createCircle = function(color, width, fill, fillOpacity) {
-    var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    var circle = document.createElementNS(SVG_URL, 'circle');
     circle.setAttribute('stroke', color);
     circle.setAttribute('stroke-width', width);
     circle.setAttribute('fill', fill);
@@ -65,6 +66,23 @@ var DRAW = (function() {
     circle.setAttribute('cx', cx);
     circle.setAttribute('cy', cy);
     circle.setAttribute('r', r);
+  };
+
+
+  DRAW.createText = function(content, fontSize) {
+    var text = document.createElementNS(SVG_URL, 'text');
+    text.setAttribute('font-size', fontSize);
+    text.textContent = content;
+    SVG.appendChild(text);
+    return text;
+  };
+
+  DRAW.modifyText = function(text, x, y, content) {
+    text.setAttribute('x', x);
+    text.setAttribute('y', y);
+    if (content !== null) {
+      text.textContent = content;
+    }
   };
 
 
