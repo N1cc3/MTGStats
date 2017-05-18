@@ -140,6 +140,7 @@
   position: absolute;
   font-size: 0.5em;
   color: yellow;
+  z-index: 2;
 }
 
 .positive {

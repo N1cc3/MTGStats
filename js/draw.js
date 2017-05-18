@@ -77,9 +77,10 @@ var DRAW = (function() {
     return text;
   };
 
-  DRAW.modifyText = function(text, x, y, content) {
+  DRAW.modifyText = function(text, x, y, fill, content) {
     text.setAttribute('x', x);
     text.setAttribute('y', y);
+    text.setAttribute('fill', fill);
     if (content !== null) {
       text.textContent = content;
     }

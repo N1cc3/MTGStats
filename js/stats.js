@@ -2,7 +2,6 @@
 
 var DRAG_SENSITIVITY = -0.6;
 var DRAG_TRIGGER_DISTANCE = 100;
-var DRAG_CIRCLE_SIZE = 30;
 var BODY = document.getElementById('body');
 var DRAG_ELEMENT = document.getElementById('dragElement');
 var UNDO_ELEMENT = document.getElementById('undoElement');
@@ -10,6 +9,9 @@ var ENDGAME_ELEMENT = document.getElementById('endgameElement');
 var PLAYERS = document.getElementById('meta_players').getAttribute('content');
 var PLAYERCOLORS = ['red', 'blue', 'teal', 'orange'];
 var LOW_HEALTH = 10;
+
+var computedFontSize = window.getComputedStyle(BODY, null).getPropertyValue("font-size");
+var DRAG_CIRCLE_SIZE = Number(computedFontSize.substring(0, computedFontSize.length - 3)) / 2;
 
 var dragAmount = 0;
 var lastDragAmount = 0;
@@ -99,6 +101,15 @@ function setColorByValue(element, value) {
   }
 }
 
+function getColor(value) {
+  if (value > 0) {
+    return 'green';
+  } else if (value < 0) {
+    return 'darkred';
+  }
+  return 'yellow';
+}
+
 //////////////////////////
 // DRAGCHANGE ELEMENTS  //
 //////////////////////////
@@ -107,20 +118,22 @@ var dragChangeElements = document.getElementsByClassName('dragChange');
 for (var dragChangeElement of dragChangeElements) {
   var lifeElement = null;
   var invert = 1;
+  var invertColors = -1;
   if (dragChangeElement.classList.contains('commanderDmg')) {
     lifeElement = dragChangeElement.parentElement.parentElement.children[0].children[1];
   }
   if (dragChangeElement.classList.contains('life')) {
     invert = -1;
+    invertColors = 1;
   }
   if (IS_MOBILE) {
     addMobileDragFeature(dragChangeElement, lifeElement);
   } else {
-    addDragFeature(dragChangeElement, lifeElement, invert);
+    addDragFeature(dragChangeElement, lifeElement, invert, invertColors);
   }
 }
 
-function addDragFeature(element, linkedElement, invert) {
+function addDragFeature(element, linkedElement, invert, invertColors) {
   element.addEventListener('mousedown', function(e) {
     if (event.which != 1) {
       return;
@@ -147,7 +160,7 @@ function addDragFeature(element, linkedElement, invert) {
     var texts = [];
     var textOffsets = [-4, -3, -2, -1, 1, 2, 3, 4];
     for (var textOffset of textOffsets) {
-      texts.push(DRAW.createText(textOffset, 40));
+      texts.push(DRAW.createText(textOffset, '6vmin'));
     }
 
     BODY.onmousemove = function(e) {
@@ -167,21 +180,20 @@ function addDragFeature(element, linkedElement, invert) {
           DRAG_ELEMENT.innerHTML = dragAmount;
           DRAG_ELEMENT.style.left = (e.pageX - DRAG_ELEMENT.offsetWidth / 2) + 'px';
           DRAG_ELEMENT.style.top = (e.pageY - DRAG_ELEMENT.offsetHeight / 2) + 'px';
-          DRAG_ELEMENT.setAttribute('positive', 'true');
           new Audio('mp3/click.mp3').play();
         } else {
           return;
         }
       }
 
-
       DRAW.modifyCircle(circle, startX, startY, distance + DRAG_CIRCLE_SIZE);
       for (var i = 0; i < textOffsets.length; i++) {
         var offsetAngle = angleWrap(textOffsets[i] * DRAG_SENSITIVITY - Math.PI / 2);
         var angle = -angleWrap(startAngle + offsetAngle);
-        var x = startX - 20 + 0.8 * distance * Math.cos(angle);
-        var y = startY + 10 + 0.8 * distance * Math.sin(angle);
-        DRAW.modifyText(texts[i], x, y, Math.abs(dragAmount + invert * textOffsets[i]));
+        var x = startX - 20 + 0.9 * distance * Math.cos(angle);
+        var y = startY + 10 + 0.9 * distance * Math.sin(angle);
+        var textContent = dragAmount + invert * textOffsets[i];
+        DRAW.modifyText(texts[i], x, y, getColor(invertColors * textContent), Math.abs(textContent));
       }
 
       var angleDiff = angleWrap(currentAngle - startAngle);
@@ -202,7 +214,7 @@ function addDragFeature(element, linkedElement, invert) {
         linkedElement.innerHTML = linkedStartValue - dragAmount;
       }
 
-      setColorByValue(DRAG_ELEMENT, dragAmount);
+      setColorByValue(DRAG_ELEMENT, invert * -dragAmount);
       DRAG_ELEMENT.innerHTML = Math.abs(dragAmount);
       DRAG_ELEMENT.style.left = (e.pageX - DRAG_ELEMENT.offsetWidth / 2) + 'px';
       DRAG_ELEMENT.style.top = (e.pageY - DRAG_ELEMENT.offsetHeight / 2) + 'px';
