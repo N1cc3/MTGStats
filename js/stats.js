@@ -169,7 +169,7 @@ function addDragFeature(element, linkedElement) {
 
       DRAW.modifyCircle(circle, startX, startY, distance);
       for (var i = 0; i < textOffsets.length; i++) {
-        var offsetAngle = angleWrap(textOffsets[i] * DRAG_SENSITIVITY + 2.5 * DRAG_SENSITIVITY);
+        var offsetAngle = angleWrap(textOffsets[i] * DRAG_SENSITIVITY + Math.PI / 2);
         console.log("offsetAngle: " + offsetAngle);
         var angle = -angleWrap(startAngle + offsetAngle);
         var x = startX - 20 + 0.8 * distance * Math.cos(angle);
