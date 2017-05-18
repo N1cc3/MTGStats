@@ -181,7 +181,7 @@ function addDragFeature(element, linkedElement, invert) {
         var angle = -angleWrap(startAngle + offsetAngle);
         var x = startX - 20 + 0.8 * distance * Math.cos(angle);
         var y = startY + 10 + 0.8 * distance * Math.sin(angle);
-        DRAW.modifyText(texts[i], x, y, Math.abs(dragAmount + textOffsets[i]));
+        DRAW.modifyText(texts[i], x, y, Math.abs(dragAmount + invert * textOffsets[i]));
       }
 
       var angleDiff = angleWrap(currentAngle - startAngle);
