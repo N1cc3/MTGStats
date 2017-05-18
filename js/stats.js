@@ -2,6 +2,7 @@
 
 var DRAG_SENSITIVITY = -0.6;
 var DRAG_TRIGGER_DISTANCE = 100;
+var DRAG_CIRCLE_SIZE = 30;
 var BODY = document.getElementById('body');
 var DRAG_ELEMENT = document.getElementById('dragElement');
 var UNDO_ELEMENT = document.getElementById('undoElement');
@@ -105,17 +106,21 @@ function setColorByValue(element, value) {
 var dragChangeElements = document.getElementsByClassName('dragChange');
 for (var dragChangeElement of dragChangeElements) {
   var lifeElement = null;
+  var invert = 1;
   if (dragChangeElement.classList.contains('commanderDmg')) {
     lifeElement = dragChangeElement.parentElement.parentElement.children[0].children[1];
+  }
+  if (dragChangeElement.classList.contains('life')) {
+    invert = -1;
   }
   if (IS_MOBILE) {
     addMobileDragFeature(dragChangeElement, lifeElement);
   } else {
-    addDragFeature(dragChangeElement, lifeElement);
+    addDragFeature(dragChangeElement, lifeElement, invert);
   }
 }
 
-function addDragFeature(element, linkedElement) {
+function addDragFeature(element, linkedElement, invert) {
   element.addEventListener('mousedown', function(e) {
     if (event.which != 1) {
       return;
@@ -148,7 +153,11 @@ function addDragFeature(element, linkedElement) {
     BODY.onmousemove = function(e) {
 
       var distance = getDistance(startX, startY, e.pageX, e.pageY);
-      DRAW.modifyLine(line, startX, startY, e.pageX, e.pageY);
+      var currentAngle = getAngle(startX, startY, e.pageX, e.pageY);
+
+      var lineX = e.pageX + DRAG_CIRCLE_SIZE * Math.cos(currentAngle - Math.PI / 2);
+      var lineY = e.pageY + DRAG_CIRCLE_SIZE * Math.sin(currentAngle + Math.PI / 2);
+      DRAW.modifyLine(line, startX, startY, lineX, lineY);
 
       if (!triggered) {
         if (distance > DRAG_TRIGGER_DISTANCE) {
@@ -165,28 +174,24 @@ function addDragFeature(element, linkedElement) {
         }
       }
 
-      var currentAngle = getAngle(startX, startY, e.pageX, e.pageY);
 
-      DRAW.modifyCircle(circle, startX, startY, distance);
+      DRAW.modifyCircle(circle, startX, startY, distance + DRAG_CIRCLE_SIZE);
       for (var i = 0; i < textOffsets.length; i++) {
         var offsetAngle = angleWrap(textOffsets[i] * DRAG_SENSITIVITY - Math.PI / 2);
-        console.log("offsetAngle: " + offsetAngle);
         var angle = -angleWrap(startAngle + offsetAngle);
         var x = startX - 20 + 0.8 * distance * Math.cos(angle);
-        console.log("x: " + x);
         var y = startY + 10 + 0.8 * distance * Math.sin(angle);
-        console.log("y: " + y);
-        DRAW.modifyText(texts[i], x, y, dragAmount + textOffsets[i]);
+        DRAW.modifyText(texts[i], x, y, Math.abs(dragAmount + textOffsets[i]));
       }
 
       var angleDiff = angleWrap(currentAngle - startAngle);
-      dragAmount += Math.floor((angleDiff + DRAG_SENSITIVITY / 2) / DRAG_SENSITIVITY);
+      dragAmount += invert * Math.floor((angleDiff + DRAG_SENSITIVITY / 2) / DRAG_SENSITIVITY);
 
       if (dragAmount != lastDragAmount) {
         if (dragAmount > lastDragAmount) {
-          startAngle = angleWrap(startAngle + DRAG_SENSITIVITY);
+          startAngle = angleWrap(startAngle + invert * DRAG_SENSITIVITY);
         } else {
-          startAngle = angleWrap(startAngle - DRAG_SENSITIVITY);
+          startAngle = angleWrap(startAngle - invert * DRAG_SENSITIVITY);
         }
         lastDragAmount = dragAmount;
         new Audio('mp3/click.mp3').play();
@@ -198,7 +203,7 @@ function addDragFeature(element, linkedElement) {
       }
 
       setColorByValue(DRAG_ELEMENT, dragAmount);
-      DRAG_ELEMENT.innerHTML = dragAmount;
+      DRAG_ELEMENT.innerHTML = Math.abs(dragAmount);
       DRAG_ELEMENT.style.left = (e.pageX - DRAG_ELEMENT.offsetWidth / 2) + 'px';
       DRAG_ELEMENT.style.top = (e.pageY - DRAG_ELEMENT.offsetHeight / 2) + 'px';
 
