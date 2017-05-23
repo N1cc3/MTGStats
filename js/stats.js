@@ -395,8 +395,8 @@ function endGame() {
   var winner = prompt('Winner? (0-' + (PLAYERS - 1) + ')', '0');
   if (winner === null) return;
   winner = Number(winner);
-  var matches = COOKIE.get('matches');
-  if (matches === '') {
+  var matches = localStorage.getItem('matches');
+  if (matches === null) {
     matches = '[]';
   }
   matches = JSON.parse(matches);
@@ -405,7 +405,7 @@ function endGame() {
     "winner": winner
   });
   var matchesString = JSON.stringify(matches);
-  COOKIE.set('matches', matchesString, 1);
+  localStorage.setItem('matches', matchesString);
   window.location.href = 'history.html';
 }
 

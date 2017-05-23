@@ -1,6 +1,6 @@
 /*jshint esversion: 6 */
 
-var matches = JSON.parse(COOKIE.get("matches"));
+var matches = JSON.parse(localStorage.getItem('matches'));
 
 function addMatches(matches) {
   var historyBox = document.getElementById('historyBox');
