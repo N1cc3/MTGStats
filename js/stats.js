@@ -127,7 +127,7 @@ for (var dragChangeElement of dragChangeElements) {
     invertColors = 1;
   }
   if (IS_MOBILE) {
-    addMobileDragFeature(dragChangeElement, lifeElement);
+    addMobileDragFeature(dragChangeElement, lifeElement, invert, invertColors);
   } else {
     addDragFeature(dragChangeElement, lifeElement, invert, invertColors);
   }
@@ -223,22 +223,6 @@ function addDragFeature(element, linkedElement, invert, invertColors) {
   });
 }
 
-var lifeElements = document.getElementsByClassName("life");
-BODY.addEventListener('mouseup', function(e) {
-  if (event.which != 1) {
-    return;
-  }
-  for (var lifeElement of lifeElements) {
-    lowHealth(lifeElement);
-  }
-  DRAW.hide();
-  DRAG_ELEMENT.style.display = 'none';
-  BODY.onmousemove = null;
-  BODY.style.cursor = null;
-  dragAmount = 0;
-  lastDragAmount = 0;
-});
-
 function registerEventListener(obj, params) {
 	if ( typeof obj._eventListeners == 'undefined' ) {
 		obj._eventListeners = [];
@@ -263,9 +247,12 @@ function unRegisterAllEventListeners(obj) {
 	obj._eventListeners = [];
 }
 
-function addMobileDragFeature(element, linkedElement) {
+function addMobileDragFeature(element, linkedElement, invert, invertColors) {
   element.addEventListener('touchstart', function(e) {
-    var startY = e.changedTouches.item(0).pageY;
+    var triggered = false;
+    var startAngle;
+    var startX = element.offsetLeft + element.offsetWidth / 2;
+    var startY = element.offsetTop + element.offsetHeight / 2;
     var startValue = Number(element.innerHTML);
     pushUndo(element, startValue);
 
@@ -275,42 +262,118 @@ function addMobileDragFeature(element, linkedElement) {
     }
 
     BODY.style.cursor = 'none';
-    DRAG_ELEMENT.style.display = '';
-    UNDO_ELEMENT.style.display = 'none';
+
+    DRAW.show();
+    var line = DRAW.createLine('lightblue', 2);
+    DRAW.modifyLine(line, startX, startY, e.changedTouches.item(0).pageX, e.changedTouches.item(0).pageY);
+    var circle = DRAW.createCircle('lightblue', 2, 'lightblue', 0.2);
+
+    var texts = [];
+    var textOffsets = [-4, -3, -2, -1, 1, 2, 3, 4];
+    for (var textOffset of textOffsets) {
+      texts.push(DRAW.createText(textOffset, '6vmin'));
+    }
+    var textFontSizePx = window.getComputedStyle(texts[0], null).getPropertyValue("font-size");
+    var textFontSize =  Number(textFontSizePx.substring(0, textFontSizePx.length - 3));
+
     registerEventListener(BODY, {
       event: 'touchmove',
       callback: function(e) {
-        dragAmount = Math.floor((startY - e.changedTouches.item(0).pageY) / DRAG_SENSITIVITY);
-        if (dragAmount != lastDragAmount) new Audio('mp3/click.mp3').play();
-        lastDragAmount = dragAmount;
+        var mouseX = e.changedTouches.item(0).pageX;
+        var mouseY = e.changedTouches.item(0).pageY;
+        var distance = getDistance(startX, startY, mouseX, mouseY);
+        var currentAngle = getAngle(startX, startY, mouseX, mouseY);
+
+        var lineX = mouseX + DRAG_CIRCLE_SIZE * Math.cos(currentAngle - Math.PI / 2);
+        var lineY = mouseY + DRAG_CIRCLE_SIZE * Math.sin(currentAngle + Math.PI / 2);
+        DRAW.modifyLine(line, startX, startY, lineX, lineY);
+
+        if (!triggered) {
+          if (distance > DRAG_TRIGGER_DISTANCE) {
+            triggered = true;
+            startAngle = getAngle(startX, startY, mouseX, mouseY);
+            DRAG_ELEMENT.style.display = '';
+            DRAG_ELEMENT.innerHTML = dragAmount;
+            DRAG_ELEMENT.style.left = (mouseX - DRAG_ELEMENT.offsetWidth / 2) + 'px';
+            DRAG_ELEMENT.style.top = (mouseY - DRAG_ELEMENT.offsetHeight / 2) + 'px';
+            new Audio('mp3/click.mp3').play();
+          } else {
+            return;
+          }
+        }
+
+        DRAW.modifyCircle(circle, startX, startY, distance + DRAG_CIRCLE_SIZE);
+        for (var i = 0; i < textOffsets.length; i++) {
+          var offsetAngle = angleWrap(textOffsets[i] * DRAG_SENSITIVITY - Math.PI / 2);
+          var angle = -angleWrap(startAngle + offsetAngle);
+          var x = startX - 0.25 * textFontSize + 0.9 * distance * Math.cos(angle);
+          var y = startY + 0.25 * textFontSize + 0.9 * distance * Math.sin(angle);
+          var textContent = dragAmount + invert * textOffsets[i];
+
+
+          DRAW.modifyText(texts[i], x, y, getColor(invertColors * textContent), Math.abs(textContent));
+        }
+
+        var angleDiff = angleWrap(currentAngle - startAngle);
+        dragAmount += invert * Math.floor((angleDiff + DRAG_SENSITIVITY / 2) / DRAG_SENSITIVITY);
+
+        if (dragAmount != lastDragAmount) {
+          if (dragAmount > lastDragAmount) {
+            startAngle = angleWrap(startAngle + invert * DRAG_SENSITIVITY);
+          } else {
+            startAngle = angleWrap(startAngle - invert * DRAG_SENSITIVITY);
+          }
+          lastDragAmount = dragAmount;
+          new Audio('mp3/click.mp3').play();
+        }
+
         element.innerHTML = startValue + dragAmount;
         if (linkedElement !== null) {
           linkedElement.innerHTML = linkedStartValue - dragAmount;
         }
-        if (dragAmount >= 0) {
-          DRAG_ELEMENT.setAttribute('positive', '');
-        } else {
-          DRAG_ELEMENT.removeAttribute('positive');
-        }
-        DRAG_ELEMENT.innerHTML = dragAmount;
+
+        setColorByValue(DRAG_ELEMENT, invert * -dragAmount);
+        DRAG_ELEMENT.innerHTML = Math.abs(dragAmount);
+        DRAG_ELEMENT.style.left = (mouseX - DRAG_ELEMENT.offsetWidth / 2) + 'px';
+        DRAG_ELEMENT.style.top = (mouseY - DRAG_ELEMENT.offsetHeight / 2) + 'px';
+
       }
     });
   });
-
-  BODY.addEventListener('touchend', function(e) {
-    if (element.classList.contains('life')) {
-      lowHealth(element);
-    }
-    DRAG_ELEMENT.style.display = 'none';
-    if (undoHistory.length === 0) {
-      UNDO_ELEMENT.style.display = 'none';
-    } else {
-      UNDO_ELEMENT.style.display = '';
-    }
-    BODY.style.cursor = null;
-    unRegisterAllEventListeners(BODY);
-  });
 }
+
+var lifeElements = document.getElementsByClassName("life");
+BODY.addEventListener('mouseup', function(e) {
+  if (event.which != 1) {
+    return;
+  }
+  for (var lifeElement of lifeElements) {
+    lowHealth(lifeElement);
+  }
+  DRAW.hide();
+  DRAG_ELEMENT.style.display = 'none';
+  BODY.onmousemove = null;
+  BODY.style.cursor = null;
+  dragAmount = 0;
+  lastDragAmount = 0;
+});
+
+BODY.addEventListener('touchend', function(e) {
+  for (var lifeElement of lifeElements) {
+    lowHealth(lifeElement);
+  }
+  DRAW.hide();
+  DRAG_ELEMENT.style.display = 'none';
+  if (undoHistory.length === 0) {
+    UNDO_ELEMENT.style.display = 'none';
+  } else {
+    UNDO_ELEMENT.style.display = '';
+  }
+  BODY.style.cursor = null;
+  dragAmount = 0;
+  lastDragAmount = 0;
+  unRegisterAllEventListeners(BODY);
+});
 
 //////////////////////////
 //    ENDGAME SLIDER    //
