@@ -3,6 +3,9 @@
 var matches = JSON.parse(localStorage.getItem('matches'));
 var BODY = document.getElementById('body');
 var SLIDER = document.getElementById('slider');
+var CLEARED_NOTIFICATION = document.getElementById('clearedNotification');
+
+addMatches(matches);
 
 function addMatches(matches) {
   var historyBox = document.getElementById('historyBox');
@@ -26,8 +29,6 @@ function addMatches(matches) {
   historyBox.appendChild(fragment);
 }
 
-addMatches(matches);
-
 function clearHistory() {
   var matchesString = "[]";
   localStorage.setItem('matches', matchesString);
@@ -36,6 +37,11 @@ function clearHistory() {
   for (matchElement of matchElements) {
     matchElement.parentNode.removeChild(matchElement);
   }
+
+  CLEARED_NOTIFICATION.setAttribute('show', '');
+  CLEARED_NOTIFICATION.addEventListener('animationend', function(e) {
+    CLEARED_NOTIFICATION.removeAttribute('show');
+  });
 }
 
 function resetSlider() {

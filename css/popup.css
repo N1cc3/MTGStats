@@ -1,0 +1,25 @@
+.notification {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  background-color: rgba(200, 200, 70, 0.8);
+  font-size: 0.5em;
+  color: #fff;
+  border-style: solid;
+  border-radius: 0.2em;
+  padding: 0.2em;
+}
+
+@keyframes timed {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.notification[show] {
+  display: block;
+  animation: timed 2.5s ease;
+}
