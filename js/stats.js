@@ -134,6 +134,15 @@ for (var dragChangeElement of dragChangeElements) {
 }
 
 function addDragFeature(element, linkedElement, invert, invertColors) {
+
+  element.onclick = function(e) {
+    element.innerHTML = Number(element.innerHTML) + invert;
+    if (linkedElement !== null) {
+      linkedElement.innerHTML = Number(linkedElement.innerHTML) - invert;
+    }
+    new Audio('mp3/click.mp3').play();
+  };
+
   element.addEventListener('mousedown', function(e) {
     if (event.which != 1) {
       return;
@@ -221,6 +230,7 @@ function addDragFeature(element, linkedElement, invert, invertColors) {
 
     };
   });
+
 }
 
 function registerEventListener(obj, params) {
@@ -248,6 +258,15 @@ function unRegisterAllEventListeners(obj) {
 }
 
 function addMobileDragFeature(element, linkedElement, invert, invertColors) {
+
+  element.onclick = function(e) {
+    element.innerHTML = Number(element.innerHTML) + invert;
+    if (linkedElement !== null) {
+      linkedElement.innerHTML = Number(linkedElement.innerHTML) - invert;
+    }
+    new Audio('mp3/click.mp3').play();
+  };
+
   element.addEventListener('touchstart', function(e) {
     var triggered = false;
     var startAngle;
@@ -340,6 +359,7 @@ function addMobileDragFeature(element, linkedElement, invert, invertColors) {
       }
     });
   });
+
 }
 
 var lifeElements = document.getElementsByClassName("life");

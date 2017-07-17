@@ -3,7 +3,7 @@
 var DRAW = (function() {
   var SVG_URL = 'http://www.w3.org/2000/svg';
   var SVG = document.createElementNS(SVG_URL, 'svg');
-  SVG.style = 'position: absolute; top: 0; left: 0;';
+  SVG.style = 'position: absolute; top: 0; left: 0; pointer-events: none;';
   SVG.setAttribute('width', '100%');
   SVG.setAttribute('height', '100%');
   SVG.setAttribute('version', '1.1');
