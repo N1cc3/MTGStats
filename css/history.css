@@ -1,12 +1,16 @@
 body {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  flex-wrap: nowrap;
 }
 
 .historyBox {
-  height: 90%;
+  height: 100%;
   width: 90%;
+  margin-top: 5%;
+  margin-bottom: 5%;
   border-style: solid;
   border-color: white;
   border-width: 0.01em;
@@ -16,6 +20,7 @@ body {
   flex-direction: column;
   flex-wrap: wrap;
   justify-content: flex-start;
+  flex-grow: 1;
 }
 
 .match {
@@ -50,4 +55,29 @@ body {
 
 .player[player='3'] {
   color: rgb(255, 165, 0);
+}
+
+
+.sliderBox {
+  width: 100%;
+}
+
+.slider {
+  width: 10em;
+  float: left;
+  text-align: right;
+  font-size: 0.2em;
+  font-style: italic;
+  white-space: nowrap;
+  padding: 0.2em;
+  border-radius: 0.4em;
+  color: white;
+  background-color: rgba(70, 200, 200, 0.8);
+  cursor: ew-resize;
+}
+
+.slider[reset] {
+  transition-property: width;
+  transition-timing-function: ease-in;
+  transition-duration: 0.5s;
 }
