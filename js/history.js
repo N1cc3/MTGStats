@@ -8,6 +8,8 @@ var CLEARED_NOTIFICATION = document.getElementById('clearedNotification');
 addMatches(matches);
 
 function addMatches(matches) {
+  if (matches == null) return;
+
   var historyBox = document.getElementById('historyBox');
   var fragment = document.createDocumentFragment();
 
