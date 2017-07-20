@@ -24,6 +24,8 @@
     <link rel="stylesheet" media="all" href="css/master.css">
     <link rel="stylesheet" media="all" href="css/history.css">
     <link rel="stylesheet" media="all" href="css/popup.css">
+
+    <script src="js/slider.js" charset="utf-8"></script>
   </head>
   <body id="body">
     <div id="historyBox" class="historyBox">
@@ -54,11 +56,7 @@
 
     </div>
 
-    <div class="sliderBox">
-      <div id="slider" class="slider">
-        Clear history &gt;&gt;
-      </div>
-    </div>
+    <slider-component callback="clearHistory">Clear history &gt;&gt;</slider-component>
 
     <div id="clearedNotification" class="notification">
       History cleared!

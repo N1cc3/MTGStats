@@ -2,7 +2,6 @@
 
 var matches = JSON.parse(localStorage.getItem('matches'));
 var BODY = document.getElementById('body');
-var SLIDER = document.getElementById('slider');
 var CLEARED_NOTIFICATION = document.getElementById('clearedNotification');
 
 addMatches(matches);
@@ -44,84 +43,4 @@ function clearHistory() {
   CLEARED_NOTIFICATION.addEventListener('animationend', function(e) {
     CLEARED_NOTIFICATION.removeAttribute('show');
   });
-}
-
-function resetSlider() {
-  SLIDER.setAttribute('reset', '');
-  SLIDER.addEventListener('transitionend', function(e) {
-    SLIDER.removeAttribute('reset');
-  });
-  SLIDER.style.removeProperty('width');
-}
-
-SLIDER.addEventListener('mousedown', function(e) {
-  if (event.which != 1) {
-    return;
-  }
-  SLIDER.removeAttribute('reset');
-  var startX = e.pageX;
-  var startWidth = SLIDER.offsetWidth;
-  BODY.onmousemove = function(e) {
-    SLIDER.style.width = startWidth + (e.pageX - startX) + 'px';
-    if (SLIDER.offsetWidth >= BODY.offsetWidth) {
-      clearHistory();
-      resetSlider();
-      BODY.onmousemove = null;
-    }
-  };
-
-  BODY.addEventListener('mouseup', function(e) {
-    if (event.which != 1) {
-      return;
-    }
-    BODY.onmousemove = null;
-    resetSlider();
-  });
-});
-
-SLIDER.addEventListener('touchstart', function(e) {
-  SLIDER.removeAttribute('reset');
-  var startX = e.changedTouches.item(0).pageX;
-  var startWidth = SLIDER.offsetWidth;
-  registerEventListener(BODY, {
-    event: 'touchmove',
-    callback: function(e) {
-      SLIDER.style.width = startWidth + (e.changedTouches.item(0).pageX - startX) + 'px';
-      if (SLIDER.offsetWidth >= BODY.offsetWidth) {
-        clearHistory();
-        resetSlider();
-        unRegisterAllEventListeners(BODY);
-      }
-    }
-  });
-
-  BODY.addEventListener('touchend', function(e) {
-    resetSlider();
-    unRegisterAllEventListeners(BODY);
-  });
-});
-
-function registerEventListener(obj, params) {
-	if ( typeof obj._eventListeners == 'undefined' ) {
-		obj._eventListeners = [];
-	}
-
-	obj.addEventListener(params.event, params.callback);
-
-	var eventListeners = obj._eventListeners;
-	eventListeners.push(params);
-	obj._eventListeners = eventListeners;
-}
-
-function unRegisterAllEventListeners(obj) {
-	if ( typeof obj._eventListeners == 'undefined' || obj._eventListeners.length === 0 ) {
-		return;
-	}
-
-	for(var i = 0, len = obj._eventListeners.length; i < len; i++) {
-		var e = obj._eventListeners[i];
-		obj.removeEventListener(e.event, e.callback);
-	}
-
-	obj._eventListeners = [];
 }

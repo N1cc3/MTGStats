@@ -56,28 +56,3 @@ body {
 .player[player='3'] {
   color: rgb(255, 165, 0);
 }
-
-
-.sliderBox {
-  width: 100%;
-}
-
-.slider {
-  width: 7em;
-  float: left;
-  text-align: right;
-  font-size: 0.2em;
-  font-style: italic;
-  white-space: nowrap;
-  padding: 0.2em;
-  border-radius: 0.4em;
-  color: white;
-  background-color: rgba(70, 200, 200, 0.8);
-  cursor: ew-resize;
-}
-
-.slider[reset] {
-  transition-property: width;
-  transition-timing-function: ease-in;
-  transition-duration: 0.5s;
-}
