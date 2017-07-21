@@ -34,6 +34,7 @@
 
     var callbackName = this.getAttribute('callback');
 
+    // Computer
     slider.addEventListener('mousedown', function(e) {
       if (event.which != 1) return;
       slider.removeAttribute('reset');
@@ -55,8 +56,29 @@
         if (event.which != 1) return;
         sliderResetting = true;
         slider.reset();
+      }, {once: true});
+    });
+
+    // Mobile
+    slider.addEventListener('touchstart', function(e) {
+      slider.removeAttribute('reset');
+
+      var startX = e.changedTouches.item(0).pageX;
+      var startWidth = slider.offsetWidth;
+      var sliderResetting = false;
+      window.addEventListener('touchmove', function(e) {
+        if (sliderResetting) return;
+        slider.style.width = Math.max(startWidth, startWidth + (e.changedTouches.item(0).pageX - startX)) + 'px';
+        if (slider.offsetWidth >= document.body.offsetWidth) {
           sliderResetting = true;
           slider.reset();
+          window[callbackName]();
+        }
+      });
+
+      window.addEventListener('touchend', function(e) {
+        sliderResetting = true;
+        slider.reset();
       }, {once: true});
     });
   };
