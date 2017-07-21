@@ -24,6 +24,8 @@
     <link rel="stylesheet" media="all" href="css/master.css">
     <link rel="stylesheet" media="all" href="css/stats.css">
 
+    <script src="js/slider-component.js" charset="utf-8"></script>
+
     <meta id="meta_players" name="players" content="4">
   </head>
 
@@ -93,11 +95,7 @@
 
     </div>
 
-    <div class="sliderBox">
-      <div id="endgameElement" class="slider">
-        Slide to record game &gt;&gt;
-      </div>
-    </div>
+    <slider-component callback="endGame" color="rgba(70, 200, 80, 0.8)">Resolve match &gt;&gt;</slider-component>
 
   </body>
 

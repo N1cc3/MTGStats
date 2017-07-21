@@ -5,7 +5,6 @@ var DRAG_TRIGGER_DISTANCE = 100;
 var BODY = document.getElementById('body');
 var DRAG_ELEMENT = document.getElementById('dragElement');
 var UNDO_ELEMENT = document.getElementById('undoElement');
-var ENDGAME_ELEMENT = document.getElementById('endgameElement');
 var PLAYERS = document.getElementById('meta_players').getAttribute('content');
 var PLAYERCOLORS = ['red', 'blue', 'teal', 'orange'];
 var LOW_HEALTH = 10;
@@ -395,10 +394,6 @@ BODY.addEventListener('touchend', function(e) {
   unRegisterAllEventListeners(BODY);
 });
 
-//////////////////////////
-//    ENDGAME SLIDER    //
-//////////////////////////
-
 function endGame() {
   if (endGameTriggered === true) {
     return;
@@ -428,58 +423,3 @@ function endGame() {
   localStorage.setItem('matches', matchesString);
   window.location.href = 'history.html';
 }
-
-function resetSlider() {
-    ENDGAME_ELEMENT.setAttribute('reset', '');
-    ENDGAME_ELEMENT.addEventListener('transitionend', function(e) {
-      ENDGAME_ELEMENT.removeAttribute('reset');
-    });
-    ENDGAME_ELEMENT.style.removeProperty('width');
-}
-
-ENDGAME_ELEMENT.addEventListener('mousedown', function(e) {
-  if (event.which != 1) {
-    return;
-  }
-  ENDGAME_ELEMENT.removeAttribute('reset');
-  var startX = e.pageX;
-  var startWidth = ENDGAME_ELEMENT.offsetWidth;
-  BODY.onmousemove = function(e) {
-    ENDGAME_ELEMENT.style.width = startWidth + (e.pageX - startX) + 'px';
-    if (ENDGAME_ELEMENT.offsetWidth >= BODY.offsetWidth) {
-      endGame();
-      resetSlider();
-      BODY.onmousemove = null;
-    }
-  };
-
-  BODY.addEventListener('mouseup', function(e) {
-    if (event.which != 1) {
-      return;
-    }
-    BODY.onmousemove = null;
-    resetSlider();
-  });
-});
-
-ENDGAME_ELEMENT.addEventListener('touchstart', function(e) {
-  ENDGAME_ELEMENT.removeAttribute('reset');
-  var startX = e.changedTouches.item(0).pageX;
-  var startWidth = ENDGAME_ELEMENT.offsetWidth;
-  registerEventListener(BODY, {
-    event: 'touchmove',
-    callback: function(e) {
-      ENDGAME_ELEMENT.style.width = startWidth + (e.changedTouches.item(0).pageX - startX) + 'px';
-      if (ENDGAME_ELEMENT.offsetWidth >= BODY.offsetWidth) {
-        endGame();
-        resetSlider();
-        unRegisterAllEventListeners(BODY);
-      }
-    }
-  });
-
-  BODY.addEventListener('touchend', function(e) {
-    resetSlider();
-    unRegisterAllEventListeners(BODY);
-  });
-});

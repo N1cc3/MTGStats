@@ -89,7 +89,7 @@
     }
 
     slider-component > div {
-      width: 7em;
+      width: 7.5em;
       float: left;
       text-align: right;
       font-size: 0.2em;
