@@ -6,12 +6,22 @@
     writable: true
   });
 
+  Object.defineProperty(sliderBox, 'color', {
+    value: '',
+    writable: true
+  });
+
+  sliderBox.attributeChangedCallback = function(attributeName, oldValue, newValue) {
+    this.children[0].backgroundColor = newValue;
+  };
+
   sliderBox.createdCallback = function() {
     var text = this.textContent;
     this.textContent = '';
 
     var slider = document.createElement('div');
     slider.textContent = text;
+    slider.style.backgroundColor = this.getAttribute('color');
     this.appendChild(slider);
 
     slider.resetSlider = function() {
