@@ -78,13 +78,13 @@
           slider.reset();
           window[callbackName]();
         }
-      });
+      }, {passive: true});
 
       window.addEventListener('mouseup', function(e) {
         if (event.which != 1) return;
         sliderResetting = true;
         slider.reset();
-      }, {once: true});
+      }, {passive: true, once: true});
     });
 
     // Mobile
@@ -102,12 +102,12 @@
           slider.reset();
           window[callbackName]();
         }
-      });
+      }, {passive: true});
 
       window.addEventListener('touchend', function(e) {
         sliderResetting = true;
         slider.reset();
-      }, {once: true});
+      }, {passive: true, once: true});
     });
   };
 
