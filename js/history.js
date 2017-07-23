@@ -1,8 +1,6 @@
 /*jshint esversion: 6 */
 
 var matches = JSON.parse(localStorage.getItem('matches'));
-var BODY = document.getElementById('body');
-var CLEARED_NOTIFICATION = document.getElementById('clearedNotification');
 
 addMatches(matches);
 
@@ -39,8 +37,8 @@ function clearHistory() {
     matchElement.parentNode.removeChild(matchElement);
   }
 
-  CLEARED_NOTIFICATION.setAttribute('show', '');
-  CLEARED_NOTIFICATION.addEventListener('animationend', function(e) {
-    CLEARED_NOTIFICATION.removeAttribute('show');
-  });
+  var popup = document.createElement('popup-component');
+  popup.setAttribute('color', 'rgba(200, 200, 70, 0.8)');
+  popup.setAttribute('message', 'History cleared');
+  document.body.appendChild(popup);
 }
