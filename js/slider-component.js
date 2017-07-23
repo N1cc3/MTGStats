@@ -1,28 +1,56 @@
 (function() {
-  var sliderBox = Object.create(HTMLElement.prototype);
+  var sliderComponent = Object.create(HTMLElement.prototype);
 
-  Object.defineProperty(sliderBox, 'callback', {
+  Object.defineProperty(sliderComponent, 'callback', {
     value: '',
     writable: true
   });
 
-  Object.defineProperty(sliderBox, 'color', {
+  Object.defineProperty(sliderComponent, 'color', {
     value: '',
     writable: true
   });
 
-  sliderBox.attributeChangedCallback = function(attributeName, oldValue, newValue) {
+  var css = `
+    slider {
+      width: 7.5em;
+      float: left;
+      text-align: right;
+      font-size: 0.2em;
+      font-style: italic;
+      white-space: nowrap;
+      padding: 0.2em;
+      border-radius: 0.4em;
+      color: white;
+      background-color: rgba(70, 200, 200, 0.8);
+      cursor: ew-resize;
+      user-select: none;
+    }
+
+    slider[reset] {
+      transition-property: width;
+      transition-timing-function: ease-in;
+      transition-duration: 0.5s;
+    }
+  `;
+
+  sliderComponent.attributeChangedCallback = function(attributeName, oldValue, newValue) {
     this.children[0].backgroundColor = newValue;
   };
 
-  sliderBox.createdCallback = function() {
+  sliderComponent.createdCallback = function() {
+    this.style.width = '100%';
+
+    var shadowRoot = this.attachShadow({mode: 'open'});
+    shadowRoot.innerHTML =`<style>${css}</style>`;
+
     var text = this.textContent;
     this.textContent = '';
 
-    var slider = document.createElement('div');
+    var slider = document.createElement('slider');
     slider.textContent = text;
     slider.style.backgroundColor = this.getAttribute('color');
-    this.appendChild(slider);
+    shadowRoot.appendChild(slider);
 
     slider.reset = function() {
       slider.setAttribute('reset', '');
@@ -83,36 +111,5 @@
     });
   };
 
-  var css = `
-    slider-component {
-      width: 100%;
-    }
-
-    slider-component > div {
-      width: 7.5em;
-      float: left;
-      text-align: right;
-      font-size: 0.2em;
-      font-style: italic;
-      white-space: nowrap;
-      padding: 0.2em;
-      border-radius: 0.4em;
-      color: white;
-      background-color: rgba(70, 200, 200, 0.8);
-      cursor: ew-resize;
-      user-select: none;
-    }
-
-    slider-component > div[reset] {
-      transition-property: width;
-      transition-timing-function: ease-in;
-      transition-duration: 0.5s;
-    }
-  `;
-  var style = document.createElement('style');
-  style.type = 'text/css';
-  style.appendChild(document.createTextNode(css));
-  document.head.appendChild(style);
-
-  var sliderBoxElement = document.registerElement('slider-component', {prototype: sliderBox});
+  document.registerElement('slider-component', {prototype: sliderComponent});
 }());
