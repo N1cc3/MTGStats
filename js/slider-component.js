@@ -35,7 +35,7 @@
   `;
 
   sliderComponent.attributeChangedCallback = function(attributeName, oldValue, newValue) {
-    this.children[0].backgroundColor = newValue;
+    this.shadowRoot.querySelector('slider').style.backgroundColor = newValue;
   };
 
   sliderComponent.createdCallback = function() {
