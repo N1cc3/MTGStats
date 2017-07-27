@@ -58,7 +58,7 @@
   popupComponent.attachedCallback = function() {
     var id = this.id;
     var popup = this.shadowRoot.querySelector('popup');
-    popup.addEventListener('animationend', function(e) {
+    popup.addEventListener('animationend', function() {
       // Remove itself
       var element = document.getElementById(id);
       element.parentNode.removeChild(element);

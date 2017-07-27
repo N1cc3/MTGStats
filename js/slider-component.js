@@ -54,7 +54,7 @@
 
     slider.reset = function() {
       slider.setAttribute('reset', '');
-      slider.addEventListener('transitionend', function(e) {
+      slider.addEventListener('transitionend', function() {
         slider.removeAttribute('reset');
       });
       slider.style.removeProperty('width');
@@ -80,7 +80,7 @@
         }
       }, {passive: true});
 
-      window.addEventListener('mouseup', function(e) {
+      window.addEventListener('mouseup', function() {
         if (event.which != 1) return;
         sliderResetting = true;
         slider.reset();
@@ -104,7 +104,7 @@
         }
       }, {passive: true});
 
-      window.addEventListener('touchend', function(e) {
+      window.addEventListener('touchend', function() {
         sliderResetting = true;
         slider.reset();
       }, {passive: true, once: true});

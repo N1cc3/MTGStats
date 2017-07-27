@@ -1,6 +1,4 @@
-/*jshint esversion: 6 */
-
-var DRAW = (function() {
+var DRAW = (function() {// eslint-disable-line no-unused-vars
   var SVG_URL = 'http://www.w3.org/2000/svg';
   var SVG = document.createElementNS(SVG_URL, 'svg');
   SVG.style = 'position: absolute; top: 0; left: 0; pointer-events: none;';

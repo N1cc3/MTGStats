@@ -1,5 +1,3 @@
-/*jshint esversion: 6 */
-
 var matches = JSON.parse(localStorage.getItem('matches'));
 
 addMatches(matches);
@@ -28,12 +26,12 @@ function addMatches(matches) {
   historyBox.appendChild(fragment);
 }
 
-function clearHistory() {
+function clearHistory() { // eslint-disable-line no-unused-vars
   var matchesString = "[]";
   localStorage.setItem('matches', matchesString);
 
   var matchElements = document.getElementsByClassName('match');
-  for (matchElement of matchElements) {
+  for (var matchElement of matchElements) {
     matchElement.parentNode.removeChild(matchElement);
   }
 

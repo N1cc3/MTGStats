@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+/*eslint no-undef: 0*/
 
 var DRAG_SENSITIVITY = -0.6;
 var DRAG_TRIGGER_DISTANCE = 100;
@@ -47,7 +47,7 @@ function popUndo() {
 }
 
 if (IS_MOBILE) {
-  UNDO_ELEMENT.addEventListener('touchstart', function(e) {
+  UNDO_ELEMENT.addEventListener('touchstart', function() {
     popUndo();
   });
 } else {
@@ -134,7 +134,7 @@ for (var dragChangeElement of dragChangeElements) {
 
 function addDragFeature(element, linkedElement, invert, invertColors) {
 
-  element.onclick = function(e) {
+  element.onclick = function() {
     element.innerHTML = Number(element.innerHTML) + invert;
     if (linkedElement !== null) {
       linkedElement.innerHTML = Number(linkedElement.innerHTML) - invert;
@@ -258,7 +258,7 @@ function unRegisterAllEventListeners(obj) {
 
 function addMobileDragFeature(element, linkedElement, invert, invertColors) {
 
-  element.onclick = function(e) {
+  element.onclick = function() {
     element.innerHTML = Number(element.innerHTML) + invert;
     if (linkedElement !== null) {
       linkedElement.innerHTML = Number(linkedElement.innerHTML) - invert;
@@ -362,7 +362,7 @@ function addMobileDragFeature(element, linkedElement, invert, invertColors) {
 }
 
 var lifeElements = document.getElementsByClassName("life");
-BODY.addEventListener('mouseup', function(e) {
+BODY.addEventListener('mouseup', function() {
   if (event.which != 1) {
     return;
   }
@@ -377,7 +377,7 @@ BODY.addEventListener('mouseup', function(e) {
   lastDragAmount = 0;
 });
 
-BODY.addEventListener('touchend', function(e) {
+BODY.addEventListener('touchend', function() {
   for (var lifeElement of lifeElements) {
     lowHealth(lifeElement);
   }
