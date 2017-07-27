@@ -25,42 +25,48 @@
     <link rel="stylesheet" media="all" href="css/stats.css">
 
     <script src="js/slider-component.js" charset="utf-8"></script>
+    <script src="js/stat-scroller-component.js" charset="utf-8"></script>
 
     <meta id="meta_players" name="players" content="2">
   </head>
 
   <body id="body">
 
-    <div class="players">
+    <div class="mainContainer">
 
-      <div class="playerRow">
+      <stat-scroller-component></stat-scroller-component>
 
-        <div class="player" player="0">
-          <div class="lifeBox">
-            <div class="dragChange infect">0</div>
-            <div class="dragChange life">40</div>
+      <div class="players">
+
+        <div class="playerRow">
+
+          <div class="player" player="0">
+            <div class="lifeBox">
+              <div class="dragChange infect">0</div>
+              <div class="dragChange life">40</div>
+            </div>
+            <div class="commanderDmgColumn">
+              <div class="dragChange commanderDmg" player="1">0</div>
+            </div>
           </div>
-          <div class="commanderDmgColumn">
-            <div class="dragChange commanderDmg" player="1">0</div>
+
+          <div class="player" player="1">
+            <div class="lifeBox">
+              <div class="dragChange infect">0</div>
+              <div class="dragChange life">40</div>
+            </div>
+            <div class="commanderDmgColumn">
+              <div class="dragChange commanderDmg" player="0">0</div>
+            </div>
           </div>
+
         </div>
 
-        <div class="player" player="1">
-          <div class="lifeBox">
-            <div class="dragChange infect">0</div>
-            <div class="dragChange life">40</div>
-          </div>
-          <div class="commanderDmgColumn">
-            <div class="dragChange commanderDmg" player="0">0</div>
-          </div>
-        </div>
+        <div id="undoElement" class="undoElement" style="display: none;"></div>
+
+        <div id="dragElement" class="dragElement" style="display: none;"></div>
 
       </div>
-
-      <div id="undoElement" class="undoElement" style="display: none;"></div>
-
-      <div id="dragElement" class="dragElement" style="display: none;"></div>
-
     </div>
 
     <slider-component callback="endGame" color="rgba(70, 200, 80, 0.8)">Resolve match &gt;&gt;</slider-component>

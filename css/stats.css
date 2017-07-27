@@ -1,5 +1,18 @@
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.mainContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  flex-grow: 1;
+  justify-content: space-around;
+  align-items: stretch;
+}
+
 .players {
-  height: calc(100% - 0.32em);
   display: flex;
   flex-direction: column;
   justify-content: space-around;
