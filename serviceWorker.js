@@ -1,19 +1,19 @@
 var CACHE_NAME = 'MTGStats-cache-v1';
 var urlsToCache = [
-  'css/history.css',
-  'css/index.css',
-  'css/master.css',
-  'css/stats.css',
-  'js/draw.js',
-  'js/history.js',
-  'js/popup-component.js',
-  'js/slider-component.js',
-  'js/stats.js',
-  'mp3/click.mp3',
-  '2player.html',
-  '4player.html',
-  'history.html',
-  'index.html'
+  './css/history.css',
+  './css/index.css',
+  './css/master.css',
+  './css/stats.css',
+  './js/draw.js',
+  './js/history.js',
+  './js/popup-component.js',
+  './js/slider-component.js',
+  './js/stats.js',
+  './mp3/click.mp3',
+  './2player.html',
+  './4player.html',
+  './history.html',
+  '.'
 ];
 
 self.addEventListener('install', function(event) {
