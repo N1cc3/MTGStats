@@ -8,6 +8,6 @@
     "eslint:recommended"
   ],
   "rules": {
-    "no-console": ["warn", { "allow": ["warn", "error"] }]
+    "no-console": [0]
   }
 }
