@@ -23,13 +23,13 @@
       display: block;
       font-size: 0.2em;
       text-align: center;
-      color: darkred;
+      color: red;
       font-weight: bold;
       text-shadow: 0.05em 0.05em 0.02em black;
     }
 
     stat[heal] {
-      color: green;
+      color: lightgreen;
     }
 
     stat[player='0'] {
