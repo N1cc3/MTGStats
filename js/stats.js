@@ -146,6 +146,20 @@ function addDragFeature(element, linkedElement, invert, invertColors) {
     if (event.which != 1) {
       return;
     }
+
+    BODY.addEventListener('mouseup', function() {
+      if (event.which != 1) {
+        return;
+      }
+      lowHealth(element);
+      DRAW.hide();
+      DRAG_ELEMENT.style.display = 'none';
+      BODY.onmousemove = null;
+      BODY.style.cursor = null;
+      dragAmount = 0;
+      lastDragAmount = 0;
+    }, {'once': true});
+
     var triggered = false;
     var startAngle;
     var startX = element.offsetLeft + element.offsetWidth / 2;
@@ -267,6 +281,22 @@ function addMobileDragFeature(element, linkedElement, invert, invertColors) {
   };
 
   element.addEventListener('touchstart', function(e) {
+
+    BODY.addEventListener('touchend', function() {
+      lowHealth(element);
+      DRAW.hide();
+      DRAG_ELEMENT.style.display = 'none';
+      if (undoHistory.length === 0) {
+        UNDO_ELEMENT.style.display = 'none';
+      } else {
+        UNDO_ELEMENT.style.display = '';
+      }
+      BODY.style.cursor = null;
+      dragAmount = 0;
+      lastDragAmount = 0;
+      unRegisterAllEventListeners(BODY);
+    }, {'once': true});
+
     var triggered = false;
     var startAngle;
     var startX = element.offsetLeft + element.offsetWidth / 2;
@@ -360,39 +390,6 @@ function addMobileDragFeature(element, linkedElement, invert, invertColors) {
   });
 
 }
-
-var lifeElements = document.getElementsByClassName("life");
-BODY.addEventListener('mouseup', function() {
-  if (event.which != 1) {
-    return;
-  }
-  for (var lifeElement of lifeElements) {
-    lowHealth(lifeElement);
-  }
-  DRAW.hide();
-  DRAG_ELEMENT.style.display = 'none';
-  BODY.onmousemove = null;
-  BODY.style.cursor = null;
-  dragAmount = 0;
-  lastDragAmount = 0;
-});
-
-BODY.addEventListener('touchend', function() {
-  for (var lifeElement of lifeElements) {
-    lowHealth(lifeElement);
-  }
-  DRAW.hide();
-  DRAG_ELEMENT.style.display = 'none';
-  if (undoHistory.length === 0) {
-    UNDO_ELEMENT.style.display = 'none';
-  } else {
-    UNDO_ELEMENT.style.display = '';
-  }
-  BODY.style.cursor = null;
-  dragAmount = 0;
-  lastDragAmount = 0;
-  unRegisterAllEventListeners(BODY);
-});
 
 function endGame() {
   if (endGameTriggered === true) {
