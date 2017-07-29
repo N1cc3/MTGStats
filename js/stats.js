@@ -5,6 +5,7 @@ var DRAG_TRIGGER_DISTANCE = 100;
 var BODY = document.getElementById('body');
 var DRAG_ELEMENT = document.getElementById('dragElement');
 var UNDO_ELEMENT = document.getElementById('undoElement');
+var STAT_SCROLLER = document.getElementById('statScroller');
 var PLAYERS = document.getElementById('meta_players').getAttribute('content');
 var PLAYERCOLORS = ['red', 'blue', 'teal', 'orange'];
 var LOW_HEALTH = 10;
@@ -138,6 +139,9 @@ function addDragFeature(element, linkedElement, invert, invertColors) {
     element.innerHTML = Number(element.innerHTML) + invert;
     if (linkedElement !== null) {
       linkedElement.innerHTML = Number(linkedElement.innerHTML) - invert;
+      STAT_SCROLLER.addStat(element.parentElement.parentElement.getAttribute('player'), 1, false, element.getAttribute('player'));
+    } else {
+      STAT_SCROLLER.addStat(element.parentElement.parentElement.getAttribute('player'), 1);
     }
     new Audio('mp3/click.mp3').play();
   };
@@ -150,6 +154,13 @@ function addDragFeature(element, linkedElement, invert, invertColors) {
     BODY.addEventListener('mouseup', function() {
       if (event.which != 1) {
         return;
+      }
+      if (triggered) {
+        if (linkedElement !== null) {
+          STAT_SCROLLER.addStat(element.parentElement.parentElement.getAttribute('player'), dragAmount, false, element.getAttribute('player'));
+        } else {
+          STAT_SCROLLER.addStat(element.parentElement.parentElement.getAttribute('player'), Math.abs(dragAmount), dragAmount > 0);
+        }
       }
       lowHealth(element);
       DRAW.hide();
@@ -276,6 +287,9 @@ function addMobileDragFeature(element, linkedElement, invert, invertColors) {
     element.innerHTML = Number(element.innerHTML) + invert;
     if (linkedElement !== null) {
       linkedElement.innerHTML = Number(linkedElement.innerHTML) - invert;
+      STAT_SCROLLER.addStat(element.parentElement.parentElement.getAttribute('player'), 1, false, element.getAttribute('player'));
+    } else {
+      STAT_SCROLLER.addStat(element.parentElement.parentElement.getAttribute('player'), 1);
     }
     new Audio('mp3/click.mp3').play();
   };
@@ -283,6 +297,13 @@ function addMobileDragFeature(element, linkedElement, invert, invertColors) {
   element.addEventListener('touchstart', function(e) {
 
     BODY.addEventListener('touchend', function() {
+      if (triggered) {
+        if (linkedElement !== null) {
+          STAT_SCROLLER.addStat(element.parentElement.parentElement.getAttribute('player'), dragAmount, false, element.getAttribute('player'));
+        } else {
+          STAT_SCROLLER.addStat(element.parentElement.parentElement.getAttribute('player'), Math.abs(dragAmount), dragAmount > 0);
+        }
+      }
       lowHealth(element);
       DRAW.hide();
       DRAG_ELEMENT.style.display = 'none';
