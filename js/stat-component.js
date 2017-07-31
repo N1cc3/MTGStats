@@ -29,8 +29,8 @@
     // var PLAYER = this.getAttribute('player');
     // var MOBILE = this.getAttribute('mobile');
     var CUMULATIVE = this.getAttribute('cumulative');
-    var VALUE_CHANGE = window[this.getAttribute('value-change')];
-    if (!VALUE_CHANGE) VALUE_CHANGE = () => {};
+    this.valueChange = window[this.getAttribute('value-change')];
+    if (!this.valueChange) this.valueChange = () => {};
 
     var diffElement = document.createElement('div');
     diffElement.style.cssText = `
@@ -45,10 +45,10 @@
       new Audio('mp3/click.mp3').play();
       if (CUMULATIVE) {
         this.innerHTML = value + 1;
-        VALUE_CHANGE(this, 1);
+        this.valueChange(this, 1);
       } else {
         this.innerHTML = value - 1;
-        VALUE_CHANGE(this, -1);
+        this.valueChange(this, -1);
       }
     });
 
@@ -70,7 +70,7 @@
         window.removeEventListener('mousemove', handleMouseMove);
         if (triggered) {
           document.body.removeChild(diffElement);
-          VALUE_CHANGE(this, diff);
+          source.valueChange(source, diff);
         }
       }, {'once': true});
 
@@ -117,8 +117,9 @@
 
   statComponent.attributeChangedCallback = function(attributeName, oldValue, newValue) {
     switch (attributeName) {
-      case 'mobile':
-      newValue;
+      case 'value-change':
+        this.valueChange = window[newValue];
+        if (!this.valueChange) this.valueChange = () => {};
         break;
     }
   };
