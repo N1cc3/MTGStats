@@ -102,9 +102,9 @@
 
         if (snap === 0 || CUMULATIVE && snap < 0) return;
 
-        diff += snap;
+        diff += CUMULATIVE ? snap : -snap;
 
-        diffElement.style.color = getColor(-diff, CUMULATIVE);
+        diffElement.style.color = getColor(diff, CUMULATIVE);
         diffElement.innerHTML = Math.abs(diff);
 
         anchorAngle = angleWrap(anchorAngle + snap * DRAG_SENSITIVITY);
