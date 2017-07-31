@@ -30,16 +30,24 @@
     // var MOBILE = this.getAttribute('mobile');
     var CUMULATIVE = this.getAttribute('cumulative');
     var VALUE_CHANGE = window[this.getAttribute('value-change')];
+    if (!VALUE_CHANGE) VALUE_CHANGE = () => {};
+
+    var diffElement = document.createElement('div');
+    diffElement.style.cssText = `
+      position: absolute;
+      font-size: 0.5em;
+      color: yellow;
+      z-index: 2;
+    `;
 
     this.addEventListener('click', function() {
       var value = Number(this.innerHTML);
+      new Audio('mp3/click.mp3').play();
       if (CUMULATIVE) {
         this.innerHTML = value + 1;
-        new Audio('mp3/click.mp3').play();
         VALUE_CHANGE(this, 1);
       } else {
         this.innerHTML = value - 1;
-        new Audio('mp3/click.mp3').play();
         VALUE_CHANGE(this, -1);
       }
     });
@@ -48,7 +56,7 @@
       if (e.button != 0) return;
 
       var triggered = false;
-      var valueDiff = 0;
+      var diff = 0;
       var anchorAngle;
       var startX = this.offsetLeft + this.offsetWidth / 2;
       var startY = this.offsetTop + this.offsetHeight / 2;
@@ -61,7 +69,8 @@
         if (e.button != 0) return;
         window.removeEventListener('mousemove', handleMouseMove);
         if (triggered) {
-          VALUE_CHANGE(this, valueDiff);
+          document.body.removeChild(diffElement);
+          VALUE_CHANGE(this, diff);
         }
       }, {'once': true});
 
@@ -75,19 +84,32 @@
             anchorAngle = getAngle(startX, startY, e.pageX, e.pageY);
             currentAngle = anchorAngle;
             new Audio('mp3/click.mp3').play();
+
+            document.body.appendChild(diffElement);
+            diffElement.innerHTML = diff;
+            diffElement.style.color = getColor(-diff, CUMULATIVE);
+            diffElement.style.left = (e.pageX - diffElement.offsetWidth / 2) + 'px';
+            diffElement.style.top = (e.pageY - diffElement.offsetHeight / 2) + 'px';
           } else return;
         }
 
         currentAngle = getAngle(startX, startY, e.pageX, e.pageY);
         var angleDiff = angleWrap(currentAngle - anchorAngle);
         var snap = Math.floor((angleDiff + DRAG_SENSITIVITY / 2) / DRAG_SENSITIVITY);
-        if (snap === 0) return;
-        if (CUMULATIVE && snap < 0) return;
 
-        valueDiff += snap;
+        diffElement.style.left = (e.pageX - diffElement.offsetWidth / 2) + 'px';
+        diffElement.style.top = (e.pageY - diffElement.offsetHeight / 2) + 'px';
+
+        if (snap === 0 || CUMULATIVE && snap < 0) return;
+
+        diff += snap;
+
+        diffElement.style.color = getColor(-diff, CUMULATIVE);
+        diffElement.innerHTML = Math.abs(diff);
+
         anchorAngle = angleWrap(anchorAngle + snap * DRAG_SENSITIVITY);
         new Audio('mp3/click.mp3').play();
-        source.innerHTML = startValue + valueDiff;
+        source.innerHTML = startValue + diff;
       }
     });
 
@@ -112,13 +134,15 @@
   }
 
   function angleWrap(angle) {
-    if (angle > Math.PI) {
-      angle -= 2 * Math.PI;
-    }
-    if (angle < -Math.PI) {
-      angle += 2 * Math.PI;
-    }
+    if (angle > Math.PI) angle -= 2 * Math.PI;
+    if (angle < -Math.PI) angle += 2 * Math.PI;
     return angle;
+  }
+
+  function getColor(value, inverted) {
+    if (value > 0 || inverted && value < 0) return 'lightgreen';
+    else if (value < 0 || inverted && value > 0) return 'red';
+    else return 'yellow';
   }
 
   document.registerElement('stat-component', {prototype: statComponent});
