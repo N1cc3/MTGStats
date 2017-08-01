@@ -2,7 +2,7 @@
   var statComponent = Object.create(HTMLElement.prototype);
 
   var DRAG_SENSITIVITY = -0.6;
-  var DRAG_TRIGGER_DISTANCE = 100;
+  var DRAG_TRIGGER_DISTANCE = 200;
 
   Object.defineProperty(statComponent, 'player', {
     value: 0,
@@ -70,6 +70,8 @@
       var line = DRAW.createLine('lightblue', 2);
       DRAW.modifyLine(line, startX, startY, e.pageX, e.pageY);
       var circle = DRAW.createCircle('lightblue', 2, 'lightblue', 0.2);
+      var triggerCircle = DRAW.createCircle('darkgrey', 2, '', 0);
+      DRAW.modifyCircle(triggerCircle, startX, startY, DRAG_TRIGGER_DISTANCE);
       var texts = [];
       var textOffsets = [-4, -3, -2, -1, 1, 2, 3, 4];
       for (var textOffset of textOffsets) {
@@ -92,16 +94,14 @@
         var distance = getDistance(startX, startY, e.pageX, e.pageY);
         var currentAngle = getAngle(startX, startY, e.pageX, e.pageY);
 
-        var lineX = e.pageX + DRAG_CIRCLE_SIZE * Math.cos(currentAngle - Math.PI / 2);
-        var lineY = e.pageY + DRAG_CIRCLE_SIZE * Math.sin(currentAngle + Math.PI / 2);
-        DRAW.modifyLine(line, startX, startY, lineX, lineY);
-
         if (!triggered) {
+          DRAW.modifyLine(line, startX, startY, e.pageX, e.pageY);
           if (distance > DRAG_TRIGGER_DISTANCE) {
             triggered = true;
             anchorAngle = getAngle(startX, startY, e.pageX, e.pageY);
             currentAngle = anchorAngle;
             new Audio('mp3/click.mp3').play();
+            triggerCircle.setAttribute('visibility', 'hidden');
 
             document.body.appendChild(diffElement);
             diffElement.innerHTML = diff;
@@ -110,6 +110,9 @@
             diffElement.style.top = (e.pageY - diffElement.offsetHeight / 2) + 'px';
           } else return;
         }
+        var lineX = e.pageX + DRAG_CIRCLE_SIZE * Math.cos(currentAngle - Math.PI / 2);
+        var lineY = e.pageY + DRAG_CIRCLE_SIZE * Math.sin(currentAngle + Math.PI / 2);
+        DRAW.modifyLine(line, startX, startY, lineX, lineY);
 
         DRAW.modifyCircle(circle, startX, startY, distance + DRAG_CIRCLE_SIZE);
         for (var i = 0; i < textOffsets.length; i++) {
@@ -207,6 +210,7 @@
       var line = document.createElementNS(SVG_URL, 'line');
       line.setAttribute('stroke', color);
       line.setAttribute('stroke-width', width);
+      line.setAttribute('visibility', 'hidden');
       SVG.appendChild(line);
       return line;
     };
@@ -216,6 +220,7 @@
       line.setAttribute('y1', y1);
       line.setAttribute('x2', x2);
       line.setAttribute('y2', y2);
+      line.setAttribute('visibility', 'visible');
     };
 
     DRAW.createCircle = function(color, width, fill, fillOpacity) {
@@ -224,6 +229,7 @@
       circle.setAttribute('stroke-width', width);
       circle.setAttribute('fill', fill);
       circle.setAttribute('fill-opacity', fillOpacity);
+      circle.setAttribute('visibility', 'hidden');
       SVG.appendChild(circle);
       return circle;
     };
@@ -232,12 +238,14 @@
       circle.setAttribute('cx', cx);
       circle.setAttribute('cy', cy);
       circle.setAttribute('r', r);
+      circle.setAttribute('visibility', 'visible');
     };
 
     DRAW.createText = function(content, fontSize) {
       var text = document.createElementNS(SVG_URL, 'text');
       text.setAttribute('font-size', fontSize);
       text.textContent = content;
+      text.setAttribute('visibility', 'hidden');
       SVG.appendChild(text);
       return text;
     };
@@ -246,6 +254,7 @@
       text.setAttribute('x', x);
       text.setAttribute('y', y);
       text.setAttribute('fill', fill);
+      text.setAttribute('visibility', 'visible');
       if (content !== null) {
         text.textContent = content;
       }
