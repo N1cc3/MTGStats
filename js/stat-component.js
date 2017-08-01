@@ -30,7 +30,7 @@
     var DRAG_CIRCLE_SIZE = Number(COMPUTED_FONT_SIZE.substring(0, COMPUTED_FONT_SIZE.length - 3)) / 2;
 
     // var PLAYER = this.getAttribute('player');
-    // var MOBILE = this.getAttribute('mobile');
+    var MOBILE = this.getAttribute('mobile');
     var CUMULATIVE = this.getAttribute('cumulative');
     this.valueChange = window[this.getAttribute('value-change')];
     if (!this.valueChange) this.valueChange = () => {};
@@ -55,8 +55,10 @@
       }
     });
 
-    this.addEventListener('mousedown', function(e) {
-      if (e.button != 0) return;
+    this.addEventListener(MOBILE ? 'touchstart' : 'mousedown', handlePointerDown);
+
+    function handlePointerDown(e) {
+      if (!MOBILE && e.button != 0) return;
 
       var triggered = false;
       var diff = 0;
@@ -66,9 +68,12 @@
       var startValue = Number(this.innerHTML);
       var source = this;
 
+      var pointerX = MOBILE ? e.changedTouches.item(0).pageX : e.pageX;
+      var pointerY = MOBILE ? e.changedTouches.item(0).pageY : e.pageY;
+
       DRAW.show();
       var line = DRAW.createLine('lightblue', 2);
-      DRAW.modifyLine(line, startX, startY, e.pageX, e.pageY);
+      DRAW.modifyLine(line, startX, startY, pointerX, pointerY);
       var circle = DRAW.createCircle('lightblue', 2, 'lightblue', 0.2);
       var triggerCircle = DRAW.createCircle('darkgrey', 2, '', 0);
       DRAW.modifyCircle(triggerCircle, startX, startY, DRAG_TRIGGER_DISTANCE);
@@ -78,11 +83,13 @@
         texts.push(DRAW.createText(textOffset, '6vmin'));
       }
 
-      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener(MOBILE ? 'touchmove' : 'mousemove', handlePointerMove);
 
-      window.addEventListener('mouseup', function() {
-        if (e.button != 0) return;
-        window.removeEventListener('mousemove', handleMouseMove);
+      window.addEventListener(MOBILE ? 'touchend' : 'mouseup', function(e) {
+        if (!MOBILE && e.button != 0) return;
+
+        window.removeEventListener(MOBILE ? 'touchmove' : 'mousemove', handlePointerMove);
+
         DRAW.hide();
         if (triggered) {
           document.body.removeChild(diffElement);
@@ -90,15 +97,18 @@
         }
       }, {'once': true});
 
-      function handleMouseMove(e) {
-        var distance = getDistance(startX, startY, e.pageX, e.pageY);
-        var currentAngle = getAngle(startX, startY, e.pageX, e.pageY);
+      function handlePointerMove(e) {
+        var pointerX = MOBILE ? e.changedTouches.item(0).pageX : e.pageX;
+        var pointerY = MOBILE ? e.changedTouches.item(0).pageY : e.pageY;
+
+        var distance = getDistance(startX, startY, pointerX, pointerY);
+        var currentAngle = getAngle(startX, startY, pointerX, pointerY);
 
         if (!triggered) {
-          DRAW.modifyLine(line, startX, startY, e.pageX, e.pageY);
+          DRAW.modifyLine(line, startX, startY, pointerX, pointerY);
           if (distance > DRAG_TRIGGER_DISTANCE) {
             triggered = true;
-            anchorAngle = getAngle(startX, startY, e.pageX, e.pageY);
+            anchorAngle = getAngle(startX, startY, pointerX, pointerY);
             currentAngle = anchorAngle;
             new Audio('mp3/click.mp3').play();
             triggerCircle.setAttribute('visibility', 'hidden');
@@ -106,12 +116,12 @@
             document.body.appendChild(diffElement);
             diffElement.innerHTML = diff;
             diffElement.style.color = getColor(-diff, CUMULATIVE);
-            diffElement.style.left = (e.pageX - diffElement.offsetWidth / 2) + 'px';
-            diffElement.style.top = (e.pageY - diffElement.offsetHeight / 2) + 'px';
+            diffElement.style.left = (pointerX - diffElement.offsetWidth / 2) + 'px';
+            diffElement.style.top = (pointerY - diffElement.offsetHeight / 2) + 'px';
           } else return;
         }
-        var lineX = e.pageX + DRAG_CIRCLE_SIZE * Math.cos(currentAngle - Math.PI / 2);
-        var lineY = e.pageY + DRAG_CIRCLE_SIZE * Math.sin(currentAngle + Math.PI / 2);
+        var lineX = pointerX + DRAG_CIRCLE_SIZE * Math.cos(currentAngle - Math.PI / 2);
+        var lineY = pointerY + DRAG_CIRCLE_SIZE * Math.sin(currentAngle + Math.PI / 2);
         DRAW.modifyLine(line, startX, startY, lineX, lineY);
 
         DRAW.modifyCircle(circle, startX, startY, distance + DRAG_CIRCLE_SIZE);
@@ -124,12 +134,11 @@
           DRAW.modifyText(texts[i], x, y, getColor(textContent), Math.abs(textContent));
         }
 
-        currentAngle = getAngle(startX, startY, e.pageX, e.pageY);
         var angleDiff = angleWrap(currentAngle - anchorAngle);
         var snap = Math.floor((angleDiff + DRAG_SENSITIVITY / 2) / DRAG_SENSITIVITY);
 
-        diffElement.style.left = (e.pageX - diffElement.offsetWidth / 2) + 'px';
-        diffElement.style.top = (e.pageY - diffElement.offsetHeight / 2) + 'px';
+        diffElement.style.left = (pointerX - diffElement.offsetWidth / 2) + 'px';
+        diffElement.style.top = (pointerY - diffElement.offsetHeight / 2) + 'px';
 
         if (snap === 0 || CUMULATIVE && snap < 0) return;
 
@@ -142,7 +151,7 @@
         new Audio('mp3/click.mp3').play();
         source.innerHTML = startValue + diff;
       }
-    });
+    }
 
   }
 
