@@ -25,6 +25,9 @@
   });
 
   statComponent.createdCallback = function() {
+    var DRAW = initDraw(document.body);
+    var COMPUTED_FONT_SIZE = window.getComputedStyle(document.body, null).getPropertyValue("font-size");
+    var DRAG_CIRCLE_SIZE = Number(COMPUTED_FONT_SIZE.substring(0, COMPUTED_FONT_SIZE.length - 3)) / 2;
 
     // var PLAYER = this.getAttribute('player');
     // var MOBILE = this.getAttribute('mobile');
@@ -63,11 +66,22 @@
       var startValue = Number(this.innerHTML);
       var source = this;
 
+      DRAW.show();
+      var line = DRAW.createLine('lightblue', 2);
+      DRAW.modifyLine(line, startX, startY, e.pageX, e.pageY);
+      var circle = DRAW.createCircle('lightblue', 2, 'lightblue', 0.2);
+      var texts = [];
+      var textOffsets = [-4, -3, -2, -1, 1, 2, 3, 4];
+      for (var textOffset of textOffsets) {
+        texts.push(DRAW.createText(textOffset, '6vmin'));
+      }
+
       window.addEventListener('mousemove', handleMouseMove);
 
       window.addEventListener('mouseup', function() {
         if (e.button != 0) return;
         window.removeEventListener('mousemove', handleMouseMove);
+        DRAW.hide();
         if (triggered) {
           document.body.removeChild(diffElement);
           source.valueChange(source, diff);
@@ -76,7 +90,11 @@
 
       function handleMouseMove(e) {
         var distance = getDistance(startX, startY, e.pageX, e.pageY);
-        var currentAngle;
+        var currentAngle = getAngle(startX, startY, e.pageX, e.pageY);
+
+        var lineX = e.pageX + DRAG_CIRCLE_SIZE * Math.cos(currentAngle - Math.PI / 2);
+        var lineY = e.pageY + DRAG_CIRCLE_SIZE * Math.sin(currentAngle + Math.PI / 2);
+        DRAW.modifyLine(line, startX, startY, lineX, lineY);
 
         if (!triggered) {
           if (distance > DRAG_TRIGGER_DISTANCE) {
@@ -91,6 +109,16 @@
             diffElement.style.left = (e.pageX - diffElement.offsetWidth / 2) + 'px';
             diffElement.style.top = (e.pageY - diffElement.offsetHeight / 2) + 'px';
           } else return;
+        }
+
+        DRAW.modifyCircle(circle, startX, startY, distance + DRAG_CIRCLE_SIZE);
+        for (var i = 0; i < textOffsets.length; i++) {
+          var offsetAngle = angleWrap(textOffsets[i] * DRAG_SENSITIVITY - Math.PI / 2);
+          var angle = -angleWrap(anchorAngle + offsetAngle);
+          var x = startX - 20 + 0.9 * distance * Math.cos(angle);
+          var y = startY + 10 + 0.9 * distance * Math.sin(angle);
+          var textContent = diff - textOffsets[i];
+          DRAW.modifyText(texts[i], x, y, getColor(textContent), Math.abs(textContent));
         }
 
         currentAngle = getAngle(startX, startY, e.pageX, e.pageY);
@@ -144,6 +172,86 @@
     if (value > 0 || inverted && value < 0) return 'lightgreen';
     else if (value < 0 || inverted && value > 0) return 'red';
     else return 'yellow';
+  }
+
+  function initDraw(parent) {
+    var SVG_URL = 'http://www.w3.org/2000/svg';
+    var SVG = document.createElementNS(SVG_URL, 'svg');
+    SVG.style = 'position: absolute; top: 0; left: 0; pointer-events: none;';
+    SVG.setAttribute('width', '100%');
+    SVG.setAttribute('height', '100%');
+    SVG.setAttribute('version', '1.1');
+
+    var DRAW = {};
+
+    DRAW.show = function() {
+      if (parent) {
+        parent.appendChild(SVG);
+      } else {
+        console.error("Call setParent on DRAW first.");
+      }
+    };
+
+    DRAW.hide = function() {
+      if (parent) {
+        if (SVG.parentNode == parent) {
+          parent.removeChild(SVG);
+        }
+        while (SVG.firstChild) {
+          SVG.removeChild(SVG.firstChild);
+        }
+      }
+    };
+
+    DRAW.createLine = function(color, width) {
+      var line = document.createElementNS(SVG_URL, 'line');
+      line.setAttribute('stroke', color);
+      line.setAttribute('stroke-width', width);
+      SVG.appendChild(line);
+      return line;
+    };
+
+    DRAW.modifyLine = function(line, x1, y1, x2, y2) {
+      line.setAttribute('x1', x1);
+      line.setAttribute('y1', y1);
+      line.setAttribute('x2', x2);
+      line.setAttribute('y2', y2);
+    };
+
+    DRAW.createCircle = function(color, width, fill, fillOpacity) {
+      var circle = document.createElementNS(SVG_URL, 'circle');
+      circle.setAttribute('stroke', color);
+      circle.setAttribute('stroke-width', width);
+      circle.setAttribute('fill', fill);
+      circle.setAttribute('fill-opacity', fillOpacity);
+      SVG.appendChild(circle);
+      return circle;
+    };
+
+    DRAW.modifyCircle = function(circle, cx, cy, r) {
+      circle.setAttribute('cx', cx);
+      circle.setAttribute('cy', cy);
+      circle.setAttribute('r', r);
+    };
+
+    DRAW.createText = function(content, fontSize) {
+      var text = document.createElementNS(SVG_URL, 'text');
+      text.setAttribute('font-size', fontSize);
+      text.textContent = content;
+      SVG.appendChild(text);
+      return text;
+    };
+
+    DRAW.modifyText = function(text, x, y, fill, content) {
+      text.setAttribute('x', x);
+      text.setAttribute('y', y);
+      text.setAttribute('fill', fill);
+      if (content !== null) {
+        text.textContent = content;
+      }
+    };
+
+    return DRAW;
   }
 
   document.registerElement('stat-component', {prototype: statComponent});
