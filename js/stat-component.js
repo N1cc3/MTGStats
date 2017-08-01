@@ -181,8 +181,8 @@
   }
 
   function getColor(value, inverted) {
-    if (value > 0 || inverted && value < 0) return 'lightgreen';
-    else if (value < 0 || inverted && value > 0) return 'red';
+    if (value > 0 || inverted && value < 0) return 'green';
+    else if (value < 0 || inverted && value > 0) return 'darkred';
     else return 'yellow';
   }
 
