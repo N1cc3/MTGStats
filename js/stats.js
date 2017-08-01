@@ -1,24 +1,11 @@
-/*eslint no-undef: 0*/
-
-var DRAG_SENSITIVITY = -0.6;
-var DRAG_TRIGGER_DISTANCE = 100;
-var BODY = document.getElementById('body');
-var DRAG_ELEMENT = document.getElementById('dragElement');
 var UNDO_ELEMENT = document.getElementById('undoElement');
 var STAT_SCROLLER = document.getElementById('statScroller');
 var PLAYERS = document.getElementById('meta_players').getAttribute('content');
 var PLAYERCOLORS = ['red', 'blue', 'teal', 'orange'];
 var LOW_HEALTH = 10;
 
-var computedFontSize = window.getComputedStyle(BODY, null).getPropertyValue("font-size");
-var DRAG_CIRCLE_SIZE = Number(computedFontSize.substring(0, computedFontSize.length - 3)) / 2;
-
-var dragAmount = 0;
-var lastDragAmount = 0;
 var undoHistory = [];
 var endGameTriggered = false;
-
-DRAW.setParent(BODY);
 
 window.mobileAndTabletcheck = function() {
   var check = false;
@@ -31,6 +18,22 @@ if (IS_MOBILE) {
   document.ontouchmove = function(event) {
     event.preventDefault();
   };
+}
+
+if (IS_MOBILE) {
+  UNDO_ELEMENT.addEventListener('touchstart', function() {
+    popUndo();
+  });
+} else {
+  document.onkeydown = function(e) {
+    var evtobj = window.event? event : e;
+    if (evtobj.keyCode == 90 && evtobj.ctrlKey) popUndo();
+    if (evtobj.keyCode == 13) endGame();
+  };
+}
+
+for (var statElement of document.getElementsByTagName('stat-component')) {
+  statElement.init(IS_MOBILE);
 }
 
 function pushUndo(element, amount) {
@@ -47,18 +50,6 @@ function popUndo() {
   }
 }
 
-if (IS_MOBILE) {
-  UNDO_ELEMENT.addEventListener('touchstart', function() {
-    popUndo();
-  });
-} else {
-  document.onkeydown = function(e) {
-    var evtobj = window.event? event : e;
-    if (evtobj.keyCode == 90 && evtobj.ctrlKey) popUndo();
-    if (evtobj.keyCode == 13) endGame();
-  };
-}
-
 function lowHealth(lifeElement) {
   var health = Number(lifeElement.innerHTML);
   if (health <= LOW_HEALTH) {
@@ -66,350 +57,6 @@ function lowHealth(lifeElement) {
   } else {
     lifeElement.removeAttribute('lowHealth');
   }
-}
-
-function getAngle(x1, y1, x2, y2) {
-  return Math.atan2(x2 - x1, y2 - y1);
-}
-
-function angleWrap(angle) {
-  if (angle > Math.PI) {
-    angle -= 2 * Math.PI;
-  }
-  if (angle < -Math.PI) {
-    angle += 2 * Math.PI;
-  }
-  return angle;
-}
-
-function getDistance(x1, y1, x2, y2) {
-  var dx = x2 - x1;
-  var dy = y2 - y1;
-  return Math.sqrt(dx * dx + dy * dy);
-}
-
-function setColorByValue(element, value) {
-  if (value > 0) {
-    element.classList.add("positive");
-  } else {
-    element.classList.remove("positive");
-  }
-  if (value < 0) {
-    element.classList.add("negative");
-  } else {
-    element.classList.remove("negative");
-  }
-}
-
-function getColor(value) {
-  if (value > 0) {
-    return 'green';
-  } else if (value < 0) {
-    return 'darkred';
-  }
-  return 'yellow';
-}
-
-//////////////////////////
-// DRAGCHANGE ELEMENTS  //
-//////////////////////////
-
-var dragChangeElements = document.getElementsByClassName('dragChange');
-for (var dragChangeElement of dragChangeElements) {
-  var lifeElement = null;
-  var invert = 1;
-  var invertColors = -1;
-  if (dragChangeElement.classList.contains('commanderDmg')) {
-    lifeElement = dragChangeElement.parentElement.parentElement.children[0].children[1];
-  }
-  if (dragChangeElement.classList.contains('life')) {
-    invert = -1;
-    invertColors = 1;
-  }
-  if (IS_MOBILE) {
-    addMobileDragFeature(dragChangeElement, lifeElement, invert, invertColors);
-  } else {
-    addDragFeature(dragChangeElement, lifeElement, invert, invertColors);
-  }
-}
-
-function addDragFeature(element, linkedElement, invert, invertColors) {
-
-  element.onclick = function() {
-    element.innerHTML = Number(element.innerHTML) + invert;
-    if (linkedElement !== null) {
-      linkedElement.innerHTML = Number(linkedElement.innerHTML) - invert;
-      STAT_SCROLLER.addStat(element.parentElement.parentElement.getAttribute('player'), 1, false, element.getAttribute('player'));
-    } else {
-      STAT_SCROLLER.addStat(element.parentElement.parentElement.getAttribute('player'), 1);
-    }
-    new Audio('mp3/click.mp3').play();
-  };
-
-  element.addEventListener('mousedown', function(e) {
-    if (event.which != 1) {
-      return;
-    }
-
-    BODY.addEventListener('mouseup', function() {
-      if (event.which != 1) {
-        return;
-      }
-      if (triggered) {
-        if (linkedElement !== null) {
-          STAT_SCROLLER.addStat(element.parentElement.parentElement.getAttribute('player'), dragAmount, false, element.getAttribute('player'));
-        } else {
-          STAT_SCROLLER.addStat(element.parentElement.parentElement.getAttribute('player'), Math.abs(dragAmount), dragAmount > 0);
-        }
-      }
-      lowHealth(element);
-      DRAW.hide();
-      DRAG_ELEMENT.style.display = 'none';
-      BODY.onmousemove = null;
-      BODY.style.cursor = null;
-      dragAmount = 0;
-      lastDragAmount = 0;
-    }, {'once': true});
-
-    var triggered = false;
-    var startAngle;
-    var startX = element.offsetLeft + element.offsetWidth / 2;
-    var startY = element.offsetTop + element.offsetHeight / 2;
-    var startValue = Number(element.innerHTML);
-    pushUndo(element, startValue);
-
-    if (linkedElement !== null) {
-      var linkedStartValue = Number(linkedElement.innerHTML);
-      pushUndo(linkedElement, linkedStartValue);
-    }
-
-    BODY.style.cursor = 'none';
-
-    DRAW.show();
-    var line = DRAW.createLine('lightblue', 2);
-    DRAW.modifyLine(line, startX, startY, e.pageX, e.pageY);
-    var circle = DRAW.createCircle('lightblue', 2, 'lightblue', 0.2);
-
-    var texts = [];
-    var textOffsets = [-4, -3, -2, -1, 1, 2, 3, 4];
-    for (var textOffset of textOffsets) {
-      texts.push(DRAW.createText(textOffset, '6vmin'));
-    }
-
-    BODY.onmousemove = function(e) {
-
-      var distance = getDistance(startX, startY, e.pageX, e.pageY);
-      var currentAngle = getAngle(startX, startY, e.pageX, e.pageY);
-
-      var lineX = e.pageX + DRAG_CIRCLE_SIZE * Math.cos(currentAngle - Math.PI / 2);
-      var lineY = e.pageY + DRAG_CIRCLE_SIZE * Math.sin(currentAngle + Math.PI / 2);
-      DRAW.modifyLine(line, startX, startY, lineX, lineY);
-
-      if (!triggered) {
-        if (distance > DRAG_TRIGGER_DISTANCE) {
-          triggered = true;
-          startAngle = getAngle(startX, startY, e.pageX, e.pageY);
-          DRAG_ELEMENT.style.display = '';
-          DRAG_ELEMENT.innerHTML = dragAmount;
-          DRAG_ELEMENT.style.left = (e.pageX - DRAG_ELEMENT.offsetWidth / 2) + 'px';
-          DRAG_ELEMENT.style.top = (e.pageY - DRAG_ELEMENT.offsetHeight / 2) + 'px';
-          new Audio('mp3/click.mp3').play();
-        } else {
-          return;
-        }
-      }
-
-      DRAW.modifyCircle(circle, startX, startY, distance + DRAG_CIRCLE_SIZE);
-      for (var i = 0; i < textOffsets.length; i++) {
-        var offsetAngle = angleWrap(textOffsets[i] * DRAG_SENSITIVITY - Math.PI / 2);
-        var angle = -angleWrap(startAngle + offsetAngle);
-        var x = startX - 20 + 0.9 * distance * Math.cos(angle);
-        var y = startY + 10 + 0.9 * distance * Math.sin(angle);
-        var textContent = dragAmount + invert * textOffsets[i];
-        DRAW.modifyText(texts[i], x, y, getColor(invertColors * textContent), Math.abs(textContent));
-      }
-
-      var angleDiff = angleWrap(currentAngle - startAngle);
-      dragAmount += invert * Math.floor((angleDiff + DRAG_SENSITIVITY / 2) / DRAG_SENSITIVITY);
-
-      if (dragAmount != lastDragAmount) {
-        if (dragAmount > lastDragAmount) {
-          startAngle = angleWrap(startAngle + invert * DRAG_SENSITIVITY);
-        } else {
-          startAngle = angleWrap(startAngle - invert * DRAG_SENSITIVITY);
-        }
-        lastDragAmount = dragAmount;
-        new Audio('mp3/click.mp3').play();
-      }
-
-      element.innerHTML = startValue + dragAmount;
-      if (linkedElement !== null) {
-        linkedElement.innerHTML = linkedStartValue - dragAmount;
-      }
-
-      setColorByValue(DRAG_ELEMENT, invert * -dragAmount);
-      DRAG_ELEMENT.innerHTML = Math.abs(dragAmount);
-      DRAG_ELEMENT.style.left = (e.pageX - DRAG_ELEMENT.offsetWidth / 2) + 'px';
-      DRAG_ELEMENT.style.top = (e.pageY - DRAG_ELEMENT.offsetHeight / 2) + 'px';
-
-    };
-  });
-
-}
-
-function registerEventListener(obj, params) {
-	if ( typeof obj._eventListeners == 'undefined' ) {
-		obj._eventListeners = [];
-	}
-
-	obj.addEventListener(params.event, params.callback);
-
-	var eventListeners = obj._eventListeners;
-	eventListeners.push(params);
-	obj._eventListeners = eventListeners;
-}
-function unRegisterAllEventListeners(obj) {
-	if ( typeof obj._eventListeners == 'undefined' || obj._eventListeners.length === 0 ) {
-		return;
-	}
-
-	for(var i = 0, len = obj._eventListeners.length; i < len; i++) {
-		var e = obj._eventListeners[i];
-		obj.removeEventListener(e.event, e.callback);
-	}
-
-	obj._eventListeners = [];
-}
-
-function addMobileDragFeature(element, linkedElement, invert, invertColors) {
-
-  element.onclick = function() {
-    element.innerHTML = Number(element.innerHTML) + invert;
-    if (linkedElement !== null) {
-      linkedElement.innerHTML = Number(linkedElement.innerHTML) - invert;
-      STAT_SCROLLER.addStat(element.parentElement.parentElement.getAttribute('player'), 1, false, element.getAttribute('player'));
-    } else {
-      STAT_SCROLLER.addStat(element.parentElement.parentElement.getAttribute('player'), 1);
-    }
-    new Audio('mp3/click.mp3').play();
-  };
-
-  element.addEventListener('touchstart', function(e) {
-
-    BODY.addEventListener('touchend', function() {
-      if (triggered) {
-        if (linkedElement !== null) {
-          STAT_SCROLLER.addStat(element.parentElement.parentElement.getAttribute('player'), dragAmount, false, element.getAttribute('player'));
-        } else {
-          STAT_SCROLLER.addStat(element.parentElement.parentElement.getAttribute('player'), Math.abs(dragAmount), dragAmount > 0);
-        }
-      }
-      lowHealth(element);
-      DRAW.hide();
-      DRAG_ELEMENT.style.display = 'none';
-      if (undoHistory.length === 0) {
-        UNDO_ELEMENT.style.display = 'none';
-      } else {
-        UNDO_ELEMENT.style.display = '';
-      }
-      BODY.style.cursor = null;
-      dragAmount = 0;
-      lastDragAmount = 0;
-      unRegisterAllEventListeners(BODY);
-    }, {'once': true});
-
-    var triggered = false;
-    var startAngle;
-    var startX = element.offsetLeft + element.offsetWidth / 2;
-    var startY = element.offsetTop + element.offsetHeight / 2;
-    var startValue = Number(element.innerHTML);
-    pushUndo(element, startValue);
-
-    if (linkedElement !== null) {
-      var linkedStartValue = Number(linkedElement.innerHTML);
-      pushUndo(linkedElement, linkedStartValue);
-    }
-
-    BODY.style.cursor = 'none';
-
-    DRAW.show();
-    var line = DRAW.createLine('lightblue', 2);
-    DRAW.modifyLine(line, startX, startY, e.changedTouches.item(0).pageX, e.changedTouches.item(0).pageY);
-    var circle = DRAW.createCircle('lightblue', 2, 'lightblue', 0.2);
-
-    var texts = [];
-    var textOffsets = [-4, -3, -2, -1, 1, 2, 3, 4];
-    for (var textOffset of textOffsets) {
-      texts.push(DRAW.createText(textOffset, '6vmin'));
-    }
-    var textFontSizePx = window.getComputedStyle(texts[0], null).getPropertyValue("font-size");
-    var textFontSize =  Number(textFontSizePx.substring(0, textFontSizePx.length - 3));
-
-    registerEventListener(BODY, {
-      event: 'touchmove',
-      callback: function(e) {
-        var mouseX = e.changedTouches.item(0).pageX;
-        var mouseY = e.changedTouches.item(0).pageY;
-        var distance = getDistance(startX, startY, mouseX, mouseY);
-        var currentAngle = getAngle(startX, startY, mouseX, mouseY);
-
-        var lineX = mouseX + DRAG_CIRCLE_SIZE * Math.cos(currentAngle - Math.PI / 2);
-        var lineY = mouseY + DRAG_CIRCLE_SIZE * Math.sin(currentAngle + Math.PI / 2);
-        DRAW.modifyLine(line, startX, startY, lineX, lineY);
-
-        if (!triggered) {
-          if (distance > DRAG_TRIGGER_DISTANCE) {
-            triggered = true;
-            startAngle = getAngle(startX, startY, mouseX, mouseY);
-            DRAG_ELEMENT.style.display = '';
-            DRAG_ELEMENT.innerHTML = dragAmount;
-            DRAG_ELEMENT.style.left = (mouseX - DRAG_ELEMENT.offsetWidth / 2) + 'px';
-            DRAG_ELEMENT.style.top = (mouseY - DRAG_ELEMENT.offsetHeight / 2) + 'px';
-            new Audio('mp3/click.mp3').play();
-          } else {
-            return;
-          }
-        }
-
-        DRAW.modifyCircle(circle, startX, startY, distance + DRAG_CIRCLE_SIZE);
-        for (var i = 0; i < textOffsets.length; i++) {
-          var offsetAngle = angleWrap(textOffsets[i] * DRAG_SENSITIVITY - Math.PI / 2);
-          var angle = -angleWrap(startAngle + offsetAngle);
-          var x = startX - 0.25 * textFontSize + 0.9 * distance * Math.cos(angle);
-          var y = startY + 0.25 * textFontSize + 0.9 * distance * Math.sin(angle);
-          var textContent = dragAmount + invert * textOffsets[i];
-
-
-          DRAW.modifyText(texts[i], x, y, getColor(invertColors * textContent), Math.abs(textContent));
-        }
-
-        var angleDiff = angleWrap(currentAngle - startAngle);
-        dragAmount += invert * Math.floor((angleDiff + DRAG_SENSITIVITY / 2) / DRAG_SENSITIVITY);
-
-        if (dragAmount != lastDragAmount) {
-          if (dragAmount > lastDragAmount) {
-            startAngle = angleWrap(startAngle + invert * DRAG_SENSITIVITY);
-          } else {
-            startAngle = angleWrap(startAngle - invert * DRAG_SENSITIVITY);
-          }
-          lastDragAmount = dragAmount;
-          new Audio('mp3/click.mp3').play();
-        }
-
-        element.innerHTML = startValue + dragAmount;
-        if (linkedElement !== null) {
-          linkedElement.innerHTML = linkedStartValue - dragAmount;
-        }
-
-        setColorByValue(DRAG_ELEMENT, invert * -dragAmount);
-        DRAG_ELEMENT.innerHTML = Math.abs(dragAmount);
-        DRAG_ELEMENT.style.left = (mouseX - DRAG_ELEMENT.offsetWidth / 2) + 'px';
-        DRAG_ELEMENT.style.top = (mouseY - DRAG_ELEMENT.offsetHeight / 2) + 'px';
-
-      }
-    });
-  });
-
 }
 
 function endGame() {
