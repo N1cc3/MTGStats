@@ -2,7 +2,6 @@
   var statComponent = Object.create(HTMLElement.prototype);
 
   var DRAG_SENSITIVITY = -0.6;
-  var DRAG_TRIGGER_DISTANCE = 200;
 
   Object.defineProperty(statComponent, 'player', {
     value: 0,
@@ -27,7 +26,8 @@
   statComponent.createdCallback = function() {
     var DRAW = initDraw(document.body);
     var COMPUTED_FONT_SIZE = window.getComputedStyle(document.body, null).getPropertyValue("font-size");
-    var DRAG_CIRCLE_SIZE = Number(COMPUTED_FONT_SIZE.substring(0, COMPUTED_FONT_SIZE.length - 3)) / 2;
+    var DRAG_CIRCLE_SIZE = Number(COMPUTED_FONT_SIZE.substring(0, COMPUTED_FONT_SIZE.length - 2)) / 2;
+    var DRAG_TRIGGER_DISTANCE = Number(COMPUTED_FONT_SIZE.substring(0, COMPUTED_FONT_SIZE.length - 2));
 
     // var PLAYER = this.getAttribute('player');
     var MOBILE = this.getAttribute('mobile');
