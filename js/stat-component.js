@@ -3,11 +3,6 @@
 
   var DRAG_SENSITIVITY = -0.6;
 
-  Object.defineProperty(statComponent, 'player', {
-    value: 0,
-    writable: true
-  });
-
   Object.defineProperty(statComponent, 'isMobile', {
     value: '',
     writable: true
@@ -30,7 +25,6 @@
       var DRAG_CIRCLE_SIZE = Number(COMPUTED_FONT_SIZE.substring(0, COMPUTED_FONT_SIZE.length - 2)) / 2;
       var DRAG_TRIGGER_DISTANCE = Number(COMPUTED_FONT_SIZE.substring(0, COMPUTED_FONT_SIZE.length - 2));
 
-      // var PLAYER = this.getAttribute('player');
       var CUMULATIVE = this.getAttribute('cumulative');
       this.valueChange = window[this.getAttribute('value-change')];
       if (!this.valueChange) this.valueChange = () => {};
