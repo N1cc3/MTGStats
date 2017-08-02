@@ -34,6 +34,12 @@ if (IS_MOBILE) {
 
 for (var statElement of document.getElementsByTagName('stat-component')) {
   statElement.init(IS_MOBILE);
+  statElement.setAttribute('value-change', 'valueChange');
+}
+
+function valueChange(element, diff) { // eslint-disable-line no-unused-vars
+  pushUndo(element, Number(element.innerHTML) - diff);
+  lowHealth(element);
 }
 
 function pushUndo(element, amount) {
@@ -44,6 +50,7 @@ function popUndo() {
   var undoObject = undoHistory.pop();
   if (undoObject) {
     undoObject.element.innerHTML = undoObject.amount;
+    lowHealth(undoObject.element);
     if (undoHistory.length === 0) {
       UNDO_ELEMENT.style.display = 'none';
     }
