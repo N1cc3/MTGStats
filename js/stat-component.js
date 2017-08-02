@@ -73,6 +73,7 @@
         DRAW.modifyCircle(triggerCircle, startX, startY, DRAG_TRIGGER_DISTANCE);
         var texts = [];
         var textOffsets = [-4, -3, -2, -1, 1, 2, 3, 4];
+        if (CUMULATIVE) textOffsets = [1, 2, 3, 4];
         for (var textOffset of textOffsets) {
           texts.push(DRAW.createText(textOffset, '6vmin'));
         }
@@ -109,7 +110,7 @@
 
               document.body.appendChild(diffElement);
               diffElement.innerHTML = diff;
-              diffElement.style.color = getColor(-diff, CUMULATIVE);
+              diffElement.style.color = getColor(-diff);
               diffElement.style.left = (pointerX - diffElement.offsetWidth / 2) + 'px';
               diffElement.style.top = (pointerY - diffElement.offsetHeight / 2) + 'px';
             } else return;
@@ -124,7 +125,7 @@
             var angle = -angleWrap(anchorAngle + offsetAngle);
             var x = startX - 20 + 0.9 * distance * Math.cos(angle);
             var y = startY + 10 + 0.9 * distance * Math.sin(angle);
-            var textContent = diff - textOffsets[i];
+            var textContent = CUMULATIVE ? diff + textOffsets[i] : diff - textOffsets[i];
             DRAW.modifyText(texts[i], x, y, getColor(textContent), Math.abs(textContent));
           }
 
@@ -134,11 +135,11 @@
           diffElement.style.left = (pointerX - diffElement.offsetWidth / 2) + 'px';
           diffElement.style.top = (pointerY - diffElement.offsetHeight / 2) + 'px';
 
-          if (snap === 0 || CUMULATIVE && snap < 0) return;
+          if (snap === 0 || CUMULATIVE && diff == 0 && snap < 0) return;
 
           diff += CUMULATIVE ? snap : -snap;
 
-          diffElement.style.color = getColor(diff, CUMULATIVE);
+          diffElement.style.color = getColor(diff);
           diffElement.innerHTML = Math.abs(diff);
 
           anchorAngle = angleWrap(anchorAngle + snap * DRAG_SENSITIVITY);
@@ -175,9 +176,9 @@
     return angle;
   }
 
-  function getColor(value, inverted) {
-    if (value > 0 || inverted && value < 0) return 'green';
-    else if (value < 0 || inverted && value > 0) return 'darkred';
+  function getColor(value) {
+    if (value > 0) return 'green';
+    else if (value < 0) return 'darkred';
     else return 'yellow';
   }
 
