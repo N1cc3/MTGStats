@@ -25,80 +25,88 @@
     <link rel="stylesheet" media="all" href="css/stats.css">
 
     <script src="js/slider-component.js" charset="utf-8"></script>
+    <script src="js/stat-scroller-component.js" charset="utf-8"></script>
+    <script src="js/stat-component.js" charset="utf-8"></script>
+
+    <script src="js/slider-component.js" charset="utf-8"></script>
 
     <meta id="meta_players" name="players" content="4">
   </head>
 
-  <body id="body">
+  <body>
 
-    <div class="players">
+    <div class="mainContainer">
 
-      <div class="playerRow">
+      <stat-scroller-component id="statScroller"></stat-scroller-component>
 
-        <div class="player" player="0">
-          <div class="lifeBox">
-            <div class="dragChange infect">0</div>
-            <div class="dragChange life">40</div>
+      <div class="players">
+
+        <div class="playerRow">
+
+          <div class="player" player="0">
+            <div class="lifeBox">
+              <stat-component class="infect" cumulative="true" player="0">0</stat-component>
+              <stat-component class="life" player="0">40</stat-component>
+            </div>
+            <div class="commanderDmgColumn">
+              <stat-component class="commanderDmg" player="0" cumulative="true" commander="1">0</stat-component>
+              <stat-component class="commanderDmg" player="0" cumulative="true" commander="2">0</stat-component>
+              <stat-component class="commanderDmg" player="0" cumulative="true" commander="3">0</stat-component>
+            </div>
           </div>
-          <div class="commanderDmgColumn">
-            <div class="dragChange commanderDmg" player="1">0</div>
-            <div class="dragChange commanderDmg" player="2">0</div>
-            <div class="dragChange commanderDmg" player="3">0</div>
+
+          <div class="player" player="1">
+            <div class="lifeBox">
+              <stat-component class="infect" cumulative="true" player="1">0</stat-component>
+              <stat-component class="life" player="1">40</stat-component>
+            </div>
+            <div class="commanderDmgColumn">
+              <stat-component class="commanderDmg" player="1" cumulative="true" commander="0">0</stat-component>
+              <stat-component class="commanderDmg" player="1" cumulative="true" commander="2">0</stat-component>
+              <stat-component class="commanderDmg" player="1" cumulative="true" commander="3">0</stat-component>
+            </div>
           </div>
+
         </div>
 
-        <div class="player" player="1">
-          <div class="lifeBox">
-            <div class="dragChange infect">0</div>
-            <div class="dragChange life">40</div>
+        <div class="playerRow">
+
+          <div class="player" player="2">
+            <div class="lifeBox">
+              <stat-component class="infect" cumulative="true" player="2">0</stat-component>
+              <stat-component class="life" player="2">40</stat-component>
+            </div>
+            <div class="commanderDmgColumn">
+              <stat-component class="commanderDmg" player="2" cumulative="true" commander="0">0</stat-component>
+              <stat-component class="commanderDmg" player="2" cumulative="true" commander="1">0</stat-component>
+              <stat-component class="commanderDmg" player="2" cumulative="true" commander="3">0</stat-component>
+            </div>
           </div>
-          <div class="commanderDmgColumn">
-            <div class="dragChange commanderDmg" player="0">0</div>
-            <div class="dragChange commanderDmg" player="2">0</div>
-            <div class="dragChange commanderDmg" player="3">0</div>
+
+          <div class="player" player="3">
+            <div class="lifeBox">
+              <stat-component class="infect" cumulative="true" player="3">0</stat-component>
+              <stat-component class="life" player="3">40</stat-component>
+            </div>
+            <div class="commanderDmgColumn">
+              <stat-component class="commanderDmg" player="3" cumulative="true" commander="0">0</stat-component>
+              <stat-component class="commanderDmg" player="3" cumulative="true" commander="1">0</stat-component>
+              <stat-component class="commanderDmg" player="3" cumulative="true" commander="2">0</stat-component>
+            </div>
           </div>
+
         </div>
+
+        <div id="undoElement" class="undoElement" style="display: none;"></div>
 
       </div>
-
-      <div class="playerRow">
-
-        <div class="player" player="2">
-          <div class="lifeBox">
-            <div class="dragChange infect">0</div>
-            <div class="dragChange life">40</div>
-          </div>
-          <div class="commanderDmgColumn">
-            <div class="dragChange commanderDmg" player="0">0</div>
-            <div class="dragChange commanderDmg" player="1">0</div>
-            <div class="dragChange commanderDmg" player="3">0</div>
-          </div>
-        </div>
-
-        <div class="player" player="3">
-          <div class="lifeBox">
-            <div class="dragChange infect">0</div>
-            <div class="dragChange life">40</div>
-          </div>
-          <div class="commanderDmgColumn">
-            <div class="dragChange commanderDmg" player="0">0</div>
-            <div class="dragChange commanderDmg" player="1">0</div>
-            <div class="dragChange commanderDmg" player="2">0</div>
-          </div>
-        </div>
-
-      </div>
-
-      <div id="dragElement" class="dragElement" style="display: none;"></div>
-
-      <div id="undoElement" class="undoElement" style="display: none;"></div>
 
     </div>
 
     <slider-component callback="endGame" color="rgba(70, 200, 80, 0.8)">Resolve match &gt;&gt;</slider-component>
 
-    <script src="js/draw.js" charset="utf-8" async></script>
-    <script src="js/stats.js" charset="utf-8" async></script>
+    <script src="js/draw.js" charset="utf-8"></script>
+    <script src="js/stats.js" charset="utf-8"></script>
   </body>
 
 </html>
