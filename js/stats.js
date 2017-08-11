@@ -38,19 +38,21 @@ for (var statElement of document.getElementsByTagName('stat-component')) {
 }
 
 function valueChange(element, diff) { // eslint-disable-line no-unused-vars
+  if (diff == 0) return;
   pushUndo(element, Number(element.innerHTML) - diff);
   lowHealth(element);
   var amount = Math.abs(diff);
-  var isHeal = diff > 0;
   var player = element.getAttribute('player');
   var commander = element.getAttribute('commander');
   if (commander != null) {
     var lifeElement = document.querySelector(`.life[player="${player}"]`);
     lifeElement.innerHTML = Number(lifeElement.innerHTML) - diff;
-    isHeal = false;
-    STAT_SCROLLER.addStat(player, amount, isHeal, commander);
+    STAT_SCROLLER.addStat(player, amount, '', commander);
+  } else if (element.classList.contains('infect')) {
+    STAT_SCROLLER.addStat(player, amount, 'infect');
   } else {
-    STAT_SCROLLER.addStat(player, amount, isHeal);
+    var type = (diff > 0) ? 'heal' : '';
+    STAT_SCROLLER.addStat(player, amount, type);
   }
 }
 

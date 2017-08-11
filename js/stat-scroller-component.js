@@ -32,6 +32,10 @@
       color: lightgreen;
     }
 
+    stat[infect] {
+      color: darkgreen;
+    }
+
     stat[player='0'] {
       background: radial-gradient(rgba(255, 0, 0, 0.5) 0%, rgba(255, 0, 0, 0.4) 40%, rgba(255, 0, 0, 0) 70%);
     }
@@ -72,14 +76,15 @@
     var statContainer = document.createElement('stat-container');
     shadowRoot.prepend(statContainer);
 
-    this.addStat = function(player, amount, isHeal, commander) {
+    this.addStat = function(player, amount, type, commander) {
       var stat = document.createElement('stat');
       stat.innerHTML = amount;
 
       if (commander) {
         stat.innerHTML += `<commanderDmg player="${commander}"> C</commanderDmg>`
       }
-      if (isHeal) stat.setAttribute('heal', '');
+      if (type == 'heal') stat.setAttribute('heal', '');
+      if (type == 'infect') stat.setAttribute('infect', '');
       stat.setAttribute('player', player);
       statContainer.prepend(stat);
     };

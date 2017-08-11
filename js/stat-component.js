@@ -126,7 +126,7 @@
             var x = startX - 20 + 0.9 * distance * Math.cos(angle);
             var y = startY + 10 + 0.9 * distance * Math.sin(angle);
             var textContent = CUMULATIVE ? diff + textOffsets[i] : diff - textOffsets[i];
-            DRAW.modifyText(texts[i], x, y, getColor(textContent), Math.abs(textContent));
+            DRAW.modifyText(texts[i], x, y, CUMULATIVE ? getColor(-textContent) : getColor(textContent), Math.abs(textContent));
           }
 
           var angleDiff = angleWrap(currentAngle - anchorAngle);
@@ -139,7 +139,7 @@
 
           diff += CUMULATIVE ? snap : -snap;
 
-          diffElement.style.color = getColor(diff);
+          diffElement.style.color = CUMULATIVE ? getColor(-diff) : getColor(diff);
           diffElement.innerHTML = Math.abs(diff);
 
           anchorAngle = angleWrap(anchorAngle + snap * DRAG_SENSITIVITY);
