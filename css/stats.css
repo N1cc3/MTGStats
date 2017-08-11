@@ -104,19 +104,19 @@ body {
   font-size: 0.7em;
 }
 
-.commanderDmg[player='0'] {
+.commanderDmg[commander='0'] {
   color: rgb(255, 120, 120);
 }
 
-.commanderDmg[player='1'] {
+.commanderDmg[commander='1'] {
   color: rgb(120, 120, 255);
 }
 
-.commanderDmg[player='2'] {
+.commanderDmg[commander='2'] {
   color: rgb(120, 255, 255);
 }
 
-.commanderDmg[player='3'] {
+.commanderDmg[commander='3'] {
   color: rgb(255, 200, 120);
 }
 

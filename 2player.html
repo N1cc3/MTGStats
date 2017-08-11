@@ -26,11 +26,12 @@
 
     <script src="js/slider-component.js" charset="utf-8"></script>
     <script src="js/stat-scroller-component.js" charset="utf-8"></script>
+    <script src="js/stat-component.js" charset="utf-8"></script>
 
     <meta id="meta_players" name="players" content="2">
   </head>
 
-  <body id="body">
+  <body>
 
     <div class="mainContainer">
 
@@ -42,29 +43,27 @@
 
           <div class="player" player="0">
             <div class="lifeBox">
-              <div class="dragChange infect">0</div>
-              <div class="dragChange life">40</div>
+              <stat-component class="infect" cumulative="true" player="0">0</stat-component>
+              <stat-component class="life" player="0">40</stat-component>
             </div>
             <div class="commanderDmgColumn">
-              <div class="dragChange commanderDmg" player="1">0</div>
+              <stat-component class="commanderDmg" player="0" cumulative="true" commander="1">0</stat-component>
             </div>
           </div>
 
           <div class="player" player="1">
             <div class="lifeBox">
-              <div class="dragChange infect">0</div>
-              <div class="dragChange life">40</div>
+              <stat-component class="infect" cumulative="true" player="1">0</stat-component>
+              <stat-component class="life" player="1">40</stat-component>
             </div>
             <div class="commanderDmgColumn">
-              <div class="dragChange commanderDmg" player="0">0</div>
+              <stat-component class="commanderDmg" player="1" cumulative="true" commander="0">0</stat-component>
             </div>
           </div>
 
         </div>
 
         <div id="undoElement" class="undoElement" style="display: none;"></div>
-
-        <div id="dragElement" class="dragElement" style="display: none;"></div>
 
       </div>
     </div>
