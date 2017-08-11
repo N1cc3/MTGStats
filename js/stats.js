@@ -39,7 +39,6 @@ for (var statElement of document.getElementsByTagName('stat-component')) {
 
 function valueChange(element, diff) { // eslint-disable-line no-unused-vars
   if (diff == 0) return;
-  pushUndo(element, Number(element.innerHTML) - diff);
   lowHealth(element);
   var amount = Math.abs(diff);
   var player = element.getAttribute('player');
@@ -48,26 +47,38 @@ function valueChange(element, diff) { // eslint-disable-line no-unused-vars
     var lifeElement = document.querySelector(`.life[player="${player}"]`);
     lifeElement.innerHTML = Number(lifeElement.innerHTML) - diff;
     STAT_SCROLLER.addStat(player, amount, '', commander);
+    pushUndo([
+      element,
+      lifeElement
+    ], [
+      Number(element.innerHTML) - diff,
+      Number(lifeElement.innerHTML) + diff
+    ]);
   } else if (element.classList.contains('infect')) {
     STAT_SCROLLER.addStat(player, amount, 'infect');
+    pushUndo([element], [Number(element.innerHTML) - diff]);
   } else {
     var type = (diff > 0) ? 'heal' : '';
     STAT_SCROLLER.addStat(player, amount, type);
+    pushUndo([element], [Number(element.innerHTML) - diff]);
   }
 }
 
-function pushUndo(element, amount) {
-  undoHistory.push({'element': element, 'amount': amount});
+function pushUndo(elements, amounts) {
+  undoHistory.push({'elements': elements, 'amounts': amounts});
 }
 
 function popUndo() {
   var undoObject = undoHistory.pop();
   if (undoObject) {
-    undoObject.element.innerHTML = undoObject.amount;
-    lowHealth(undoObject.element);
+    for (var i = 0; i < undoObject.elements.length; i++) {
+      undoObject.elements[i].innerHTML = undoObject.amounts[i];
+      lowHealth(undoObject.elements[i]);
+    }
     if (undoHistory.length === 0) {
       UNDO_ELEMENT.style.display = 'none';
     }
+    STAT_SCROLLER.removeStat();
   }
 }
 
