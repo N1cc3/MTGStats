@@ -66,6 +66,9 @@ function valueChange(element, diff) { // eslint-disable-line no-unused-vars
 
 function pushUndo(elements, amounts) {
   undoHistory.push({'elements': elements, 'amounts': amounts});
+  if (IS_MOBILE) {
+    UNDO_ELEMENT.style.display = '';
+  }
 }
 
 function popUndo() {
