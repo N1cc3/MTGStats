@@ -1,6 +1,7 @@
 body {
   display: flex;
   flex-direction: column;
+  line-height: 0.8;
 }
 
 .mainContainer {
@@ -65,7 +66,6 @@ body {
 .life {
   color: white;
   font-size: 2em;
-  margin-top: -0.25em;
   font-weight: bold;
 }
 
@@ -96,7 +96,6 @@ body {
 .commanderDmgColumn {
   display: flex;
   flex-direction: column;
-  padding: 0.1em;
 }
 
 .commanderDmg {

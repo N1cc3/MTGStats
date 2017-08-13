@@ -17,6 +17,7 @@
       border-radius: 0.2em;
       background-color: rgba(0, 0, 0, 0.5);
       margin-left: 0.1em;
+      padding-top: 0.02em;
     }
 
     stat {
