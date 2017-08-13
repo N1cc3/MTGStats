@@ -27,7 +27,10 @@ if (IS_MOBILE) {
   document.onkeydown = function(e) {
     var evtobj = window.event? event : e;
     if (evtobj.keyCode == 90 && evtobj.ctrlKey) popUndo();
-    if (evtobj.keyCode == 13) endGame();
+    if (evtobj.keyCode == 13) {
+      e.preventDefault();
+      endGame();
+    }
   };
 }
 
@@ -102,7 +105,6 @@ function endGame() {
     return;
   }
   endGameTriggered = true;
-  var playerNames = [];
 
   var endGameCurtain = document.getElementById('curtain');
   endGameCurtain.style.display = '';
@@ -110,23 +112,39 @@ function endGame() {
     form.style.display = '';
   }
 
-  var winner;
-  for (var crownElement of document.getElementsByClassName('crown')) {
-    if (crownElement.getAttribute('value') == 'true') winner = Number(crownElement.getAttribute('player'));
-  }
 
-  // var matches = localStorage.getItem('matches');
-  // if (matches === null) {
-  //   matches = '[]';
-  // }
-  // matches = JSON.parse(matches);
-  // matches.push({
-  //   "players": playerNames,
-  //   "winner": winner
-  // });
-  // var matchesString = JSON.stringify(matches);
-  // localStorage.setItem('matches', matchesString);
-  // window.location.href = 'history.html';
+  document.addEventListener('keydown', submit);
+
+  function submit(e) {
+    if (e.code != 'Enter') return;
+
+    document.removeEventListener('keydown', submit);
+
+    var winner;
+    for (var crownElement of document.getElementsByClassName('crown')) {
+      if (crownElement.getAttribute('value') == 'true') winner = Number(crownElement.getAttribute('player'));
+    }
+
+    var playerNames = [];
+    for (var i = 0; i < PLAYERS; i++) {
+      var nameField = document.querySelector(`.nameField[player='${i}']`);
+      var name = nameField.value;
+      playerNames.push(name);
+    }
+
+    var matches = localStorage.getItem('matches');
+    if (matches === null) {
+      matches = '[]';
+    }
+    matches = JSON.parse(matches);
+    matches.push({
+      "players": playerNames,
+      "winner": winner
+    });
+    var matchesString = JSON.stringify(matches);
+    localStorage.setItem('matches', matchesString);
+    window.location.href = 'history.html';
+  }
 }
 
 function crownClick(e) { // eslint-disable-line no-unused-vars
@@ -134,6 +152,9 @@ function crownClick(e) { // eslint-disable-line no-unused-vars
   if (crownElement.getAttribute('value')) {
     crownElement.setAttribute('value', '');
   } else {
+    for (var otherCrown of document.getElementsByClassName('crown')) {
+      otherCrown.setAttribute('value', '');
+    }
     crownElement.setAttribute('value', 'true');
   }
   new Audio('mp3/click.mp3').play();
