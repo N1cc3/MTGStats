@@ -149,3 +149,57 @@ body {
   background-repeat: no-repeat;
   background-size: contain;
 }
+
+.playerForm {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.crown {
+  height: 0.5em;
+  width: 0.5em;
+  background: url('../img/crown.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.crown[value=''] {
+  filter: grayscale();
+}
+
+.nameField {
+  width: 9em;
+  font-size: 0.3em;
+  border: none;
+  border-radius: 0.5em;
+  text-align: center;
+}
+
+.nameField[player="0"] {
+  background: rgba(255, 0, 0, 0.6);
+}
+
+.nameField[player="1"] {
+  background: rgba(0, 0, 255, 0.6);
+}
+
+.nameField[player="2"] {
+  background: rgba(0, 255, 255, 0.6);
+}
+
+.nameField[player="3"] {
+  background: rgba(255, 165, 0, 0.6);
+}
+
+.curtain {
+  opacity: 0.75;
+  background-color: black;
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  z-index: 2;
+}

@@ -33,6 +33,8 @@
 
   <body>
 
+    <div id="curtain" class="curtain" style="display: none;"></div>
+
     <div class="mainContainer">
 
       <stat-scroller-component id="statScroller"></stat-scroller-component>
@@ -49,6 +51,10 @@
             <div class="commanderDmgColumn">
               <stat-component class="commanderDmg" player="0" cumulative="true" commander="1">0</stat-component>
             </div>
+            <form class="playerForm" style="display: none;">
+              <div class="crown" player="0" value=""></div>
+              <input class="nameField" type="text" name="MTGplayername" value="" autocomplete="on" maxlength="10" player="0">
+            </form>
           </div>
 
           <div class="player" player="1">
@@ -59,6 +65,10 @@
             <div class="commanderDmgColumn">
               <stat-component class="commanderDmg" player="1" cumulative="true" commander="0">0</stat-component>
             </div>
+            <form class="playerForm" style="display: none;">
+              <div class="crown" player="0" value=""></div>
+              <input class="nameField" type="text" name="MTGplayername" value="" autocomplete="on" maxlength="10" player="1">
+            </form>
           </div>
 
         </div>

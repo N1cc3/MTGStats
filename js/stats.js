@@ -1,7 +1,6 @@
 var UNDO_ELEMENT = document.getElementById('undoElement');
 var STAT_SCROLLER = document.getElementById('statScroller');
 var PLAYERS = document.getElementById('meta_players').getAttribute('content');
-var PLAYERCOLORS = ['red', 'blue', 'teal', 'orange'];
 var LOW_HEALTH = 10;
 
 var undoHistory = [];
@@ -35,6 +34,10 @@ if (IS_MOBILE) {
 for (var statElement of document.getElementsByTagName('stat-component')) {
   statElement.init(IS_MOBILE);
   statElement.setAttribute('value-change', 'valueChange');
+}
+
+for (var crownElement of document.getElementsByClassName('crown')) {
+  crownElement.addEventListener('click', crownClick);
 }
 
 function valueChange(element, diff) { // eslint-disable-line no-unused-vars
@@ -100,26 +103,38 @@ function endGame() {
   }
   endGameTriggered = true;
   var playerNames = [];
-  for (var i = 0; i < PLAYERS; i++) {
-    playerNames[i] = prompt('Player ' + PLAYERCOLORS[i] + ' name?', PLAYERCOLORS[i]);
-    if (playerNames[i] === null) {
-      endGameTriggered = false;
-      return;
-    }
+
+  var endGameCurtain = document.getElementById('curtain');
+  endGameCurtain.style.display = '';
+  for (var form of document.getElementsByClassName('playerForm')) {
+    form.style.display = '';
   }
-  var winner = prompt('Winner? (0-' + (PLAYERS - 1) + ')', '0');
-  if (winner === null) return;
-  winner = Number(winner);
-  var matches = localStorage.getItem('matches');
-  if (matches === null) {
-    matches = '[]';
+
+  var winner;
+  for (var crownElement of document.getElementsByClassName('crown')) {
+    if (crownElement.getAttribute('value') == 'true') winner = Number(crownElement.getAttribute('player'));
   }
-  matches = JSON.parse(matches);
-  matches.push({
-    "players": playerNames,
-    "winner": winner
-  });
-  var matchesString = JSON.stringify(matches);
-  localStorage.setItem('matches', matchesString);
-  window.location.href = 'history.html';
+
+  // var matches = localStorage.getItem('matches');
+  // if (matches === null) {
+  //   matches = '[]';
+  // }
+  // matches = JSON.parse(matches);
+  // matches.push({
+  //   "players": playerNames,
+  //   "winner": winner
+  // });
+  // var matchesString = JSON.stringify(matches);
+  // localStorage.setItem('matches', matchesString);
+  // window.location.href = 'history.html';
+}
+
+function crownClick(e) { // eslint-disable-line no-unused-vars
+  var crownElement = e.srcElement;
+  if (crownElement.getAttribute('value')) {
+    crownElement.setAttribute('value', '');
+  } else {
+    crownElement.setAttribute('value', 'true');
+  }
+  new Audio('mp3/click.mp3').play();
 }
