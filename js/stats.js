@@ -48,6 +48,12 @@ for (var nameField of document.getElementsByClassName('nameField')) {
   nameField.addEventListener('input', validateFields);
 }
 
+for (var playerForm of document.getElementsByClassName('playerForm')) {
+  playerForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+  });
+}
+
 function valueChange(element, diff) { // eslint-disable-line no-unused-vars
   if (diff == 0) return;
   lowHealth(element);
@@ -121,8 +127,9 @@ function endGame() {
   document.addEventListener('keydown', submit);
 
   function submit(e) {
+    if (CHECK_ELEMENT.getAttribute('disabled') == 'true') return;
     if (e.type == 'keydown' && e.code != 'Enter') return;
-    if (e.type == 'click' && CHECK_ELEMENT.getAttribute('disabled') == 'true') return;
+    if (e.type == 'click') return;
 
     document.removeEventListener('keydown', submit);
     CHECK_ELEMENT.removeEventListener('click', submit);
