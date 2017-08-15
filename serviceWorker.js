@@ -1,10 +1,11 @@
-var CACHE_NAME = 'MTGStats-cache-v1';
+var CACHE_NAME = 'MTGStats-cache-v1.1';
 var urlsToCache = [
   './css/history.css',
   './css/index.css',
   './css/master.css',
   './css/stats.css',
   './img/bg1.webp',
+  './img/crown.png',
   './img/MTG-512x512.png',
   './img/infect.png',
   './img/undo.png',
@@ -12,6 +13,8 @@ var urlsToCache = [
   './js/history.js',
   './js/popup-component.js',
   './js/slider-component.js',
+  './js/stat-component.js',
+  './js/stat-scroller-component.js',
   './js/stats.js',
   './mp3/click.mp3',
   './2player.html',
@@ -64,7 +67,7 @@ self.addEventListener('fetch', function(event) {
 
 self.addEventListener('activate', function(event) {
 
-  var cacheWhitelist = ['MTGStats-cache-v1'];
+  var cacheWhitelist = [CACHE_NAME];
 
   event.waitUntil(
     caches.keys().then(function(cacheNames) {
