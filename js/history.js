@@ -31,8 +31,8 @@ function clearHistory() { // eslint-disable-line no-unused-vars
   localStorage.setItem('matches', matchesString);
 
   var matchElements = document.getElementsByClassName('match');
-  for (var matchElement of matchElements) {
-    matchElement.parentNode.removeChild(matchElement);
+  while (matchElements.length > 0) {
+    matchElements[0].parentNode.removeChild(matchElements[0]);
   }
 
   var popup = document.createElement('popup-component');
