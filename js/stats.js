@@ -129,7 +129,6 @@ function endGame() {
   function submit(e) {
     if (CHECK_ELEMENT.getAttribute('disabled') == 'true') return;
     if (e.type == 'keydown' && e.code != 'Enter') return;
-    if (e.type == 'click') return;
 
     document.removeEventListener('keydown', submit);
     CHECK_ELEMENT.removeEventListener('click', submit);
