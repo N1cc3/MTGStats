@@ -149,6 +149,24 @@ body {
   background-size: contain;
 }
 
+.checkElement {
+  position: absolute;
+  height: 0.7em;
+  width: 0.7em;
+  background-image: url('../img/check.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  z-index: 2;
+}
+
+.checkElement[disabled='true'] {
+  filter: grayscale();
+}
+
+.checkElement:hover:not([disabled='true']) {
+  filter: brightness(150%);
+}
+
 .playerForm {
   position: absolute;
   z-index: 3;

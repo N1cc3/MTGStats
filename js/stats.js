@@ -1,4 +1,5 @@
 var UNDO_ELEMENT = document.getElementById('undoElement');
+var CHECK_ELEMENT = document.getElementById('checkElement');
 var STAT_SCROLLER = document.getElementById('statScroller');
 var PLAYERS = document.getElementById('meta_players').getAttribute('content');
 var LOW_HEALTH = 10;
@@ -19,11 +20,7 @@ if (IS_MOBILE) {
   };
 }
 
-if (IS_MOBILE) {
-  UNDO_ELEMENT.addEventListener('touchstart', function() {
-    popUndo();
-  });
-} else {
+if (!IS_MOBILE) {
   document.onkeydown = function(e) {
     var evtobj = window.event? event : e;
     if (evtobj.keyCode == 90 && evtobj.ctrlKey) popUndo();
@@ -34,6 +31,10 @@ if (IS_MOBILE) {
   };
 }
 
+UNDO_ELEMENT.addEventListener('click', function() {
+  popUndo();
+});
+
 for (var statElement of document.getElementsByTagName('stat-component')) {
   statElement.init(IS_MOBILE);
   statElement.setAttribute('value-change', 'valueChange');
@@ -41,6 +42,10 @@ for (var statElement of document.getElementsByTagName('stat-component')) {
 
 for (var crownElement of document.getElementsByClassName('crown')) {
   crownElement.addEventListener('click', crownClick);
+}
+
+for (var nameField of document.getElementsByClassName('nameField')) {
+  nameField.addEventListener('input', validateFields);
 }
 
 function valueChange(element, diff) { // eslint-disable-line no-unused-vars
@@ -72,9 +77,7 @@ function valueChange(element, diff) { // eslint-disable-line no-unused-vars
 
 function pushUndo(elements, amounts) {
   undoHistory.push({'elements': elements, 'amounts': amounts});
-  if (IS_MOBILE) {
-    UNDO_ELEMENT.style.display = '';
-  }
+  UNDO_ELEMENT.style.display = '';
 }
 
 function popUndo() {
@@ -111,14 +114,18 @@ function endGame() {
   for (var form of document.getElementsByClassName('playerForm')) {
     form.style.display = '';
   }
+  CHECK_ELEMENT.style.display = '';
+  CHECK_ELEMENT.setAttribute('disabled', 'true');
 
-
+  CHECK_ELEMENT.addEventListener('click', submit);
   document.addEventListener('keydown', submit);
 
   function submit(e) {
-    if (e.code != 'Enter') return;
+    if (e.type == 'keydown' && e.code != 'Enter') return;
+    if (e.type == 'click' && CHECK_ELEMENT.getAttribute('disabled') == 'true') return;
 
     document.removeEventListener('keydown', submit);
+    CHECK_ELEMENT.removeEventListener('click', submit);
 
     var winner;
     for (var crownElement of document.getElementsByClassName('crown')) {
@@ -147,7 +154,7 @@ function endGame() {
   }
 }
 
-function crownClick(e) { // eslint-disable-line no-unused-vars
+function crownClick(e) {
   var crownElement = e.srcElement;
   if (crownElement.getAttribute('value')) {
     crownElement.setAttribute('value', '');
@@ -158,4 +165,24 @@ function crownClick(e) { // eslint-disable-line no-unused-vars
     crownElement.setAttribute('value', 'true');
   }
   new Audio('mp3/click.mp3').play();
+  validateFields();
+}
+
+function validateFields() {
+  var allValid = true;
+  for (var nameField of document.getElementsByClassName('nameField')) {
+    if (nameField.value == null || nameField.value == '') allValid = false;
+  }
+
+  var crownIsActive = false;
+  for (var crownElement of document.getElementsByClassName('crown')) {
+    if (crownElement.getAttribute('value')) crownIsActive = true;
+  }
+  if (!crownIsActive) allValid = false;
+
+  if (allValid) {
+    CHECK_ELEMENT.setAttribute('disabled', '');
+  } else {
+    CHECK_ELEMENT.setAttribute('disabled', 'true');
+  }
 }
