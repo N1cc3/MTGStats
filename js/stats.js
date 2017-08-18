@@ -3,6 +3,7 @@ var CHECK_ELEMENT = document.getElementById('checkElement');
 var STAT_SCROLLER = document.getElementById('statScroller');
 var PLAYERS = document.getElementById('meta_players').getAttribute('content');
 var LOW_HEALTH = 10;
+var HIGH_CMDR_DMG = 15;
 
 var undoHistory = [];
 var endGameTriggered = false;
@@ -61,6 +62,7 @@ function valueChange(element, diff) { // eslint-disable-line no-unused-vars
   var player = element.getAttribute('player');
   var commander = element.getAttribute('commander');
   if (commander != null) {
+    highCmdrDmg(element);
     var lifeElement = document.querySelector(`.life[player="${player}"]`);
     lifeElement.innerHTML = Number(lifeElement.innerHTML) - diff;
     STAT_SCROLLER.addStat(player, amount, '', commander);
@@ -90,8 +92,10 @@ function popUndo() {
   var undoObject = undoHistory.pop();
   if (undoObject) {
     for (var i = 0; i < undoObject.elements.length; i++) {
-      undoObject.elements[i].innerHTML = undoObject.amounts[i];
-      lowHealth(undoObject.elements[i]);
+      var undoElement = undoObject.elements[i];
+      undoElement.innerHTML = undoObject.amounts[i];
+      lowHealth(undoElement);
+      if (undoElement.getAttribute('commander') != null) highCmdrDmg(undoElement);
     }
     if (undoHistory.length === 0) {
       UNDO_ELEMENT.style.display = 'none';
@@ -106,6 +110,15 @@ function lowHealth(lifeElement) {
     lifeElement.setAttribute('lowHealth', 'true');
   } else {
     lifeElement.removeAttribute('lowHealth');
+  }
+}
+
+function highCmdrDmg(cmdrDmgElement) {
+  var cmdrDmg = Number(cmdrDmgElement.innerHTML);
+  if (cmdrDmg >= HIGH_CMDR_DMG) {
+    cmdrDmgElement.setAttribute('highCmdrDmg', 'true');
+  } else {
+    cmdrDmgElement.removeAttribute('highCmdrDmg');
   }
 }
 

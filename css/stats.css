@@ -103,6 +103,20 @@ body {
   font-size: 0.7em;
 }
 
+.commanderDmg[highCmdrDmg='true'] {
+  animation-name: highCmdrDmg;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes highCmdrDmg {
+  to {
+    filter: brightness(150%);
+  }
+}
+
 .commanderDmg[commander='0'] {
   color: rgb(255, 120, 120);
 }
