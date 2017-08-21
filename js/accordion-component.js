@@ -1,16 +1,6 @@
 (function() {
   var accordionComponent = Object.create(HTMLElement.prototype);
 
-  Object.defineProperty(accordionComponent, 'open', {
-    value: '',
-    writable: true
-  });
-
-  Object.defineProperty(accordionComponent, 'title', {
-    value: '',
-    writable: true
-  });
-
   var content;
 
   accordionComponent.createdCallback = function() {
