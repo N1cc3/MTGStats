@@ -11,33 +11,25 @@
     writable: true
   });
 
-  var css = `
-    .title {
-      color: white;
-    }
-
-    .content {
-      display: none;
-    }
-  `;
+  var content;
 
   accordionComponent.createdCallback = function() {
-    var shadowRoot = this.attachShadow({mode: 'open'});
-    shadowRoot.innerHTML =`<style>${css}</style>`;
+    content = this.innerHTML;
+    this.innerHTML = null;
 
     this.titleElement = document.createElement('div');
-    this.titleElement.className = 'title';
+    this.titleElement.className = 'accordion-component-title';
     this.titleElement.innerHTML = this.getAttribute('title');
-    shadowRoot.appendChild(this.titleElement);
+    this.appendChild(this.titleElement);
 
     this.contentElement = document.createElement('div');
     this.contentElement.className = 'content';
-    shadowRoot.appendChild(this.contentElement);
+    this.appendChild(this.contentElement);
   };
 
   accordionComponent.attachedCallback = function() {
-    this.contentElement.innerHTML = this.innerHTML;
-    this.innerHTML = null;
+    this.contentElement.innerHTML = content;
+    this.contentElement.style.display = 'none';
     this.addEventListener('click', function() {
       this.toggle();
     });
@@ -65,11 +57,11 @@
   }
 
   accordionComponent.open = function() {
-    this.shadowRoot.querySelector('.content').style.display = 'block';
+    this.querySelector('.content').style.display = 'block';
   }
 
   accordionComponent.close = function() {
-    this.shadowRoot.querySelector('.content').style.display = 'none';
+    this.querySelector('.content').style.display = 'none';
   }
 
   document.registerElement('accordion-component', {prototype: accordionComponent});
