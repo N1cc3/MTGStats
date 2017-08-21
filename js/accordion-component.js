@@ -38,10 +38,14 @@
   accordionComponent.attributeChangedCallback = function(attributeName, oldValue, newValue) {
     switch (attributeName) {
       case 'open':
-        newValue;
+        if (this.getAttribute('open') != null) {
+          this.open();
+        } else {
+          this.close();
+        }
         break;
       case 'title':
-        newValue;
+        this.titleElement.innerHTML = newValue;
         break;
     }
   };
