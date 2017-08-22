@@ -165,7 +165,8 @@ function endGame() {
     matches = JSON.parse(matches);
     matches.push({
       "players": playerNames,
-      "winner": winner
+      "winner": winner,
+      "millis": Date.now()
     });
     var matchesString = JSON.stringify(matches);
     localStorage.setItem('matches', matchesString);

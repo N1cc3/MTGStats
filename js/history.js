@@ -6,7 +6,9 @@ function addMatches(matches) {
   if (matches == null) return;
 
   var historyBox = document.getElementById('historyBox');
-  var fragment = document.createDocumentFragment();
+
+  var matchGroupElements = [];
+  var matchGroupIds = [];
 
   for (var match of matches) {
     var matchElement = document.createElement('div');
@@ -20,17 +22,42 @@ function addMatches(matches) {
       playerElement.textContent = players[i];
       matchElement.appendChild(playerElement);
     }
-    fragment.appendChild(matchElement);
+    var date = new Date(match.millis);
+    if (date == 'Invalid Date') date = null;
+    var matchGroupId = getDateGroup(match.millis).getTime();
+    console.log(matchGroupId);
+    var matchGroupElement = matchGroupElements[matchGroupIds.indexOf(matchGroupId)];
+    if (matchGroupElement) {
+      matchGroupElement.appendChild(matchElement);
+    } else {
+      matchGroupElement = document.createElement('accordion-component');
+      matchGroupElement.setAttribute('id', date != null ? `matchGroup-${date.getTime()}` : 'matchGroup-noDate');
+      matchGroupElement.appendChild(matchElement);
+      matchGroupElements.push(matchGroupElement);
+      matchGroupIds.push(matchGroupId);
+    }
   }
 
-  historyBox.appendChild(fragment);
+  for (var matchGroupElement2 of matchGroupElements) {
+    historyBox.appendChild(matchGroupElement2);
+    var date2 = new Date(matchGroupIds[matchGroupElements.indexOf(matchGroupElement2)]);
+    matchGroupElement2.title = date2 != null ? `${date2.getDate()}.${date2.getMonth() + 1}.${date2.getFullYear()}` : 'No date';
+  }
+  matchGroupElements[matchGroupElements.length - 1].setAttribute('open', '');
+}
+
+function getDateGroup(millis) {
+  var date = new Date(millis);
+  var simpleDate = new Date(0);
+  simpleDate.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
+  return simpleDate;
 }
 
 function clearHistory() { // eslint-disable-line no-unused-vars
   var matchesString = "[]";
   localStorage.setItem('matches', matchesString);
 
-  var matchElements = document.getElementsByClassName('match');
+  var matchElements = document.getElementById('historyBox').children;
   while (matchElements.length > 0) {
     matchElements[0].parentNode.removeChild(matchElements[0]);
   }

@@ -3,7 +3,7 @@
 
   var content;
 
-  accordionComponent.createdCallback = function() {
+  accordionComponent.attachedCallback = function() {
     content = this.innerHTML;
     this.innerHTML = null;
 
@@ -15,9 +15,7 @@
     this.contentElement = document.createElement('div');
     this.contentElement.className = 'content';
     this.appendChild(this.contentElement);
-  };
 
-  accordionComponent.attachedCallback = function() {
     this.contentElement.innerHTML = content;
     this.contentElement.style.display = 'none';
     this.addEventListener('click', function() {
