@@ -170,7 +170,7 @@ body {
   background-image: url('../img/check.png');
   background-repeat: no-repeat;
   background-size: contain;
-  z-index: 2;
+  z-index: 3;
 }
 
 .checkElement[disabled='true'] {
