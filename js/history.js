@@ -41,7 +41,7 @@ function addMatches(matches) {
   for (var matchGroupElement2 of matchGroupElements) {
     historyBox.appendChild(matchGroupElement2);
     var date2 = new Date(matchGroupIds[matchGroupElements.indexOf(matchGroupElement2)]);
-    matchGroupElement2.title = date2 != null ? `${date2.getDate()}.${date2.getMonth() + 1}.${date2.getFullYear()}` : 'No date';
+    matchGroupElement2.title = date2 != 'Invalid Date' ? `${date2.getDate()}.${date2.getMonth() + 1}.${date2.getFullYear()}` : 'No date';
   }
   var lastMatchElement = matchGroupElements[matchGroupElements.length - 1];
   if (lastMatchElement) lastMatchElement.setAttribute('open', '');
