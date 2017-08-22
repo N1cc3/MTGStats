@@ -43,7 +43,8 @@ function addMatches(matches) {
     var date2 = new Date(matchGroupIds[matchGroupElements.indexOf(matchGroupElement2)]);
     matchGroupElement2.title = date2 != null ? `${date2.getDate()}.${date2.getMonth() + 1}.${date2.getFullYear()}` : 'No date';
   }
-  matchGroupElements[matchGroupElements.length - 1].setAttribute('open', '');
+  var lastMatchElement = matchGroupElements[matchGroupElements.length - 1];
+  if (lastMatchElement) lastMatchElement.setAttribute('open', '');
 }
 
 function getDateGroup(millis) {
