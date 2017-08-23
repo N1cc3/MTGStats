@@ -1,16 +1,18 @@
-var CACHE_NAME = 'MTGStats-cache-v1.2.0';
+var CACHE_NAME = 'MTGStats-cache-v1.2.1';
 var urlsToCache = [
   './css/history.css',
   './css/index.css',
   './css/master.css',
   './css/stats.css',
   './img/bg1.webp',
+  './img/check.png',
   './img/crown.png',
   './img/favicon.ico',
+  './img/infect.png',
   './img/MTG-512x512.png',
   './img/MTG.png',
-  './img/infect.png',
   './img/undo.png',
+  './js/accordion-component.js',
   './js/draw.js',
   './js/history.js',
   './js/popup-component.js',
