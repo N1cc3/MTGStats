@@ -1,4 +1,4 @@
-var CACHE_NAME = 'MTGStats-cache-v1.2.1';
+var CACHE_NAME = 'MTGStats-cache-v1.2.2';
 var urlsToCache = [
   './css/history.css',
   './css/index.css',
