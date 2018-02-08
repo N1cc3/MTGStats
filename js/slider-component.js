@@ -63,16 +63,16 @@
     var callbackName = this.getAttribute('callback');
 
     // Computer
-    slider.addEventListener('mousedown', function(e) {
-      if (event.which != 1) return;
+    slider.addEventListener('mousedown', function(event) {
+      if (event.button != 0) return;
       slider.removeAttribute('reset');
 
-      var startX = e.pageX;
+      var startX = event.pageX;
       var startWidth = slider.offsetWidth;
       var sliderResetting = false;
-      window.addEventListener('mousemove', function(e) {
+      window.addEventListener('mousemove', function(event2) {
         if (sliderResetting) return;
-        slider.style.width = Math.max(startWidth, startWidth + (e.pageX - startX)) + 'px';
+        slider.style.width = Math.max(startWidth, startWidth + (event2.pageX - startX)) + 'px';
         if (slider.offsetWidth >= document.body.offsetWidth) {
           sliderResetting = true;
           slider.reset();
@@ -80,8 +80,8 @@
         }
       }, {passive: true});
 
-      window.addEventListener('mouseup', function() {
-        if (event.which != 1) return;
+      window.addEventListener('mouseup', function(event2) {
+        if (event2.button != 0) return;
         sliderResetting = true;
         slider.reset();
       }, {passive: true, once: true});
