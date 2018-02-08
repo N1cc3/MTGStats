@@ -184,7 +184,9 @@ function crownClick(e) {
     }
     crownElement.setAttribute('value', 'true');
   }
-  new Audio('mp3/click.mp3').play();
+  let clickSound = new Audio('mp3/click.mp3');
+  clickSound.volume = 0.2;
+  clickSound.play();
   validateFields();
 }
 
