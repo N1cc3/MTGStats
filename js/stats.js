@@ -173,6 +173,9 @@ function endGame() {
   }
 }
 
+const clickSound = new Audio('mp3/click.mp3')
+clickSound.volume = 0.2
+
 function crownClick(e) {
   const crownElement = e.srcElement
   if (crownElement.getAttribute('value')) {
@@ -183,8 +186,7 @@ function crownClick(e) {
     }
     crownElement.setAttribute('value', 'true')
   }
-  let clickSound = new Audio('mp3/click.mp3')
-  clickSound.volume = 0.2
+
   clickSound.play()
   validateFields()
 }
