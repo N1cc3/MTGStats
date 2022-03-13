@@ -27,34 +27,32 @@ var urlsToCache = [
   '.',
 ]
 
-self.addEventListener('install', function (event) {
+self.addEventListener('install', (event) => {
   // Perform install steps
   event.waitUntil(
-    caches.open(CACHE_NAME).then(function (cache) {
+    caches.open(CACHE_NAME).then((cache) => {
       console.log('Opened cache')
       return cache.addAll(urlsToCache)
     })
   )
 })
 
-self.addEventListener('fetch', function (event) {
+self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request).then(function (response) {
+    caches.match(event.request).then((response) => {
       // Cache hit - return response
-      if (response) {
-        return response
-      }
+      if (response) return response
 
-      var fetchRequest = event.request.clone()
+      const fetchRequest = event.request.clone()
 
-      return fetch(fetchRequest).then(function (response) {
+      return fetch(fetchRequest).then((response) => {
         if (!response || response.status !== 200 || response.type !== 'basic') {
           return response
         }
 
-        var responseToCache = response.clone()
+        const responseToCache = response.clone()
 
-        caches.open(CACHE_NAME).then(function (cache) {
+        caches.open(CACHE_NAME).then((cache) => {
           cache.put(event.request, responseToCache)
         })
 
@@ -64,14 +62,14 @@ self.addEventListener('fetch', function (event) {
   )
 })
 
-self.addEventListener('activate', function (event) {
-  var cacheWhitelist = [CACHE_NAME]
+self.addEventListener('activate', (event) => {
+  const cacheWhitelist = [CACHE_NAME]
 
   event.waitUntil(
-    caches.keys().then(function (cacheNames) {
+    caches.keys().then((cacheNames) => {
       return Promise.all(
-        cacheNames.map(function (cacheName) {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
+        cacheNames.map((cacheName) => {
+          if (!cacheWhitelist.includes(cacheName)) {
             return caches.delete(cacheName)
           }
         })
