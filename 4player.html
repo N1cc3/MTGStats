@@ -1,37 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>MTG Stats</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
-    <meta name="mobile-web-app-capable" content="yes">
-    <link rel="manifest" href="manifest.json">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <link rel="manifest" href="manifest.json" />
 
-    <link rel="stylesheet" media="all" href="css/master.css">
-    <link rel="stylesheet" media="all" href="css/stats.css">
+    <link rel="stylesheet" media="all" href="css/master.css" />
+    <link rel="stylesheet" media="all" href="css/stats.css" />
 
     <script src="js/slider-component.js" charset="utf-8"></script>
     <script src="js/stat-scroller-component.js" charset="utf-8"></script>
     <script src="js/stat-component.js" charset="utf-8"></script>
+    <script src="js/audio.js" charset="utf-8"></script>
 
-    <script src="js/slider-component.js" charset="utf-8"></script>
-
-    <meta id="meta_players" name="players" content="4">
+    <meta id="meta_players" name="players" content="4" />
   </head>
 
   <body>
-
-    <div id="curtain" class="curtain" style="display: none;"></div>
+    <div id="curtain" class="curtain" style="display: none"></div>
 
     <div class="mainContainer">
-
       <stat-scroller-component id="statScroller"></stat-scroller-component>
 
       <div class="players">
-
         <div class="playerRow">
-
           <div class="player" player="0">
             <div class="lifeBox">
               <stat-component class="infect" cumulative="true" player="0">0</stat-component>
@@ -55,11 +50,9 @@
               <stat-component class="commanderDmg" player="1" cumulative="true" commander="3">0</stat-component>
             </div>
           </div>
-
         </div>
 
         <div class="playerRow">
-
           <div class="player" player="2">
             <div class="lifeBox">
               <stat-component class="infect" cumulative="true" player="2">0</stat-component>
@@ -83,13 +76,10 @@
               <stat-component class="commanderDmg" player="3" cumulative="true" commander="2">0</stat-component>
             </div>
           </div>
-
         </div>
 
-        <div id="undoElement" class="undoElement" style="display: none;"></div>
-
+        <div id="undoElement" class="undoElement" style="display: none"></div>
       </div>
-
     </div>
 
     <slider-component callback="endGame" color="rgba(70, 200, 80, 0.8)">Resolve match &gt;&gt;</slider-component>
@@ -97,5 +87,4 @@
     <script src="js/draw.js" charset="utf-8"></script>
     <script src="js/stats.js" charset="utf-8"></script>
   </body>
-
 </html>

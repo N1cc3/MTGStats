@@ -43,9 +43,7 @@ if (!IS_MOBILE) {
   }
 }
 
-UNDO_ELEMENT.addEventListener('click', function () {
-  popUndo()
-})
+UNDO_ELEMENT.addEventListener('click', popUndo)
 
 for (const statElement of document.getElementsByTagName('stat-component')) {
   statElement.setAttribute('value-change', 'valueChange')
@@ -95,6 +93,7 @@ function pushUndo(elements, amounts) {
 }
 
 function popUndo() {
+  window.playClickSound()
   const undoObject = undoHistory.pop()
   if (undoObject) {
     for (let i = 0; i < undoObject.elements.length; i++) {
@@ -173,9 +172,6 @@ function endGame() {
   }
 }
 
-const clickSound = new Audio('mp3/click.mp3')
-clickSound.volume = 0.2
-
 function crownClick(e) {
   const crownElement = e.srcElement
   if (crownElement.getAttribute('value')) {
@@ -187,7 +183,7 @@ function crownClick(e) {
     crownElement.setAttribute('value', 'true')
   }
 
-  clickSound.play()
+  window.playClickSound()
   validateFields()
 }
 

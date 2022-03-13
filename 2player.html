@@ -1,35 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>MTG Stats</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
-    <meta name="mobile-web-app-capable" content="yes">
-    <link rel="manifest" href="manifest.json">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <link rel="manifest" href="manifest.json" />
 
-    <link rel="stylesheet" media="all" href="css/master.css">
-    <link rel="stylesheet" media="all" href="css/stats.css">
+    <link rel="stylesheet" media="all" href="css/master.css" />
+    <link rel="stylesheet" media="all" href="css/stats.css" />
 
     <script src="js/slider-component.js" charset="utf-8"></script>
     <script src="js/stat-scroller-component.js" charset="utf-8"></script>
     <script src="js/stat-component.js" charset="utf-8"></script>
+    <script src="js/audio.js" charset="utf-8"></script>
 
-    <meta id="meta_players" name="players" content="2">
+    <meta id="meta_players" name="players" content="2" />
   </head>
 
   <body>
-
-    <div id="curtain" class="curtain" style="display: none;"></div>
+    <div id="curtain" class="curtain" style="display: none"></div>
 
     <div class="mainContainer">
-
       <stat-scroller-component id="statScroller"></stat-scroller-component>
 
       <div class="players">
-
         <div class="playerRow">
-
           <div class="player" player="0">
             <div class="lifeBox">
               <stat-component class="infect" cumulative="true" player="0">0</stat-component>
@@ -38,9 +35,17 @@
             <div class="commanderDmgColumn">
               <stat-component class="commanderDmg" player="0" cumulative="true" commander="1">0</stat-component>
             </div>
-            <form class="playerForm" style="display: none;">
+            <form class="playerForm" style="display: none">
               <div class="crown" player="0" value=""></div>
-              <input class="nameField" type="text" name="MTGplayername" value="" autocomplete="on" maxlength="10" player="0">
+              <input
+                class="nameField"
+                type="text"
+                name="MTGplayername"
+                value=""
+                autocomplete="on"
+                maxlength="10"
+                player="0"
+              />
             </form>
           </div>
 
@@ -52,17 +57,23 @@
             <div class="commanderDmgColumn">
               <stat-component class="commanderDmg" player="1" cumulative="true" commander="0">0</stat-component>
             </div>
-            <form class="playerForm" style="display: none;">
+            <form class="playerForm" style="display: none">
               <div class="crown" player="1" value=""></div>
-              <input class="nameField" type="text" name="MTGplayername" value="" autocomplete="on" maxlength="10" player="1">
+              <input
+                class="nameField"
+                type="text"
+                name="MTGplayername"
+                value=""
+                autocomplete="on"
+                maxlength="10"
+                player="1"
+              />
             </form>
           </div>
-
         </div>
 
-        <div id="undoElement" class="undoElement" style="display: none;"></div>
-        <div id="checkElement" class="checkElement" style="display: none;"></div>
-
+        <div id="undoElement" class="undoElement" style="display: none"></div>
+        <div id="checkElement" class="checkElement" style="display: none"></div>
       </div>
     </div>
 
@@ -71,5 +82,4 @@
     <script src="js/draw.js" charset="utf-8"></script>
     <script src="js/stats.js" charset="utf-8"></script>
   </body>
-
 </html>

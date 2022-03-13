@@ -22,7 +22,7 @@ window.customElements.define(
 
         this.addEventListener('click', function () {
           var value = Number(this.innerHTML)
-          new Audio('mp3/click.mp3').play()
+          window.playClickSound()
           if (CUMULATIVE) {
             this.innerHTML = value + 1
             this.valueChange(this, 1)
@@ -92,7 +92,7 @@ window.customElements.define(
                 triggered = true
                 anchorAngle = getAngle(startX, startY, pointerX, pointerY)
                 currentAngle = anchorAngle
-                new Audio('mp3/click.mp3').play()
+                window.playClickSound()
                 triggerCircle.setAttribute('visibility', 'hidden')
 
                 document.body.appendChild(diffElement)
@@ -136,7 +136,9 @@ window.customElements.define(
             diffElement.innerHTML = Math.abs(diff)
 
             anchorAngle = angleWrap(anchorAngle + snap * DRAG_SENSITIVITY)
-            new Audio('mp3/click.mp3').play()
+
+            window.playClickSound()
+
             source.innerHTML = startValue + diff
           }
         }
