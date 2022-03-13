@@ -1,60 +1,58 @@
-(function() {
-  var accordionComponent = Object.create(HTMLElement.prototype);
+window.customElements.define(
+  'accordion-component',
+  class extends HTMLElement {
+    connectedCallback() {
+      const content = this.innerHTML
+      this.innerHTML = null
 
-  var content;
+      this.titleElement = document.createElement('div')
+      this.titleElement.className = 'accordion-component-title'
+      this.titleElement.innerHTML = this.getAttribute('title')
+      this.appendChild(this.titleElement)
 
-  accordionComponent.attachedCallback = function() {
-    content = this.innerHTML;
-    this.innerHTML = null;
+      this.contentElement = document.createElement('div')
+      this.contentElement.className = 'content'
+      this.appendChild(this.contentElement)
 
-    this.titleElement = document.createElement('div');
-    this.titleElement.className = 'accordion-component-title';
-    this.titleElement.innerHTML = this.getAttribute('title');
-    this.appendChild(this.titleElement);
-
-    this.contentElement = document.createElement('div');
-    this.contentElement.className = 'content';
-    this.appendChild(this.contentElement);
-
-    this.contentElement.innerHTML = content;
-    this.contentElement.style.display = 'none';
-    this.addEventListener('click', function() {
-      this.toggle();
-    });
-  };
-
-  accordionComponent.attributeChangedCallback = function(attributeName, oldValue, newValue) {
-    switch (attributeName) {
-      case 'open':
-        if (this.getAttribute('open') != null) {
-          this.open();
-        } else {
-          this.close();
-        }
-        break;
-      case 'title':
-        this.titleElement.innerHTML = newValue;
-        break;
+      this.contentElement.innerHTML = content
+      this.contentElement.style.display = 'none'
+      this.addEventListener('click', function () {
+        this.toggle()
+      })
     }
-  };
 
-  accordionComponent.toggle = function() {
-    if (this.getAttribute('open') != null) {
-      this.removeAttribute('open');
-      this.close();
-    } else {
-      this.setAttribute('open', '');
-      this.open();
+    static get observedAttributes() {
+      return ['open', 'title']
+    }
+
+    attributeChangedCallback(name, _oldValue, newValue) {
+      switch (name) {
+        case 'open':
+          if (this.getAttribute('open') != null) this.open()
+          else this.close()
+          break
+        case 'title':
+          this.titleElement.innerHTML = newValue
+          break
+      }
+    }
+
+    toggle() {
+      if (this.getAttribute('open') != null) {
+        this.removeAttribute('open')
+        this.close()
+      } else {
+        this.setAttribute('open', '')
+        this.open()
+      }
+    }
+
+    open() {
+      this.querySelector('.content').style.display = 'block'
+    }
+
+    close() {
+      this.querySelector('.content').style.display = 'none'
     }
   }
-
-  accordionComponent.open = function() {
-    this.querySelector('.content').style.display = 'block';
-  }
-
-  accordionComponent.close = function() {
-    this.querySelector('.content').style.display = 'none';
-  }
-
-  document.registerElement('accordion-component', {prototype: accordionComponent});
-}());
+)
