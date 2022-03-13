@@ -1,4 +1,4 @@
-var CACHE_NAME = 'MTGStats-cache-v1.3.0'
+var CACHE_NAME = 'MTGStats-cache-v1.3.1'
 var urlsToCache = [
   './css/history.css',
   './css/index.css',
@@ -20,6 +20,7 @@ var urlsToCache = [
   './js/stat-component.js',
   './js/stat-scroller-component.js',
   './js/stats.js',
+  './js/audio.js',
   './mp3/click.mp3',
   './2player.html',
   './4player.html',
